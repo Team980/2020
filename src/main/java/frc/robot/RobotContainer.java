@@ -40,12 +40,15 @@ public class RobotContainer {
 
         driveTrain = new DriveTrain();
         driveTrain.setDefaultCommand(new RunCommand(() -> 
+        driveTrain.arcadeDrive(-xBox.getY(Hand.kLeft) , xBox.getX(Hand.kRight) , driveTrain)));
+    );
+        /*driveTrain.setDefaultCommand(new RunCommand(() -> 
             driveTrain.arcadeDrive(
                 applyDeadband(-xBox.getY(Hand.kLeft), MOVE_DEADBAND) , 
                 applyDeadband(xBox.getX(Hand.kRight), TURN_DEADBAND)
             ), 
             driveTrain)
-        );
+        );*/
         
         JoystickButton a = new JoystickButton(xBox, 1);
         a.whenPressed(() -> driveTrain.setDrivePidEnabled(true));
