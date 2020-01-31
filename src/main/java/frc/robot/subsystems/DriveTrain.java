@@ -24,8 +24,8 @@ import static frc.robot.util.Constants.*;
 
 public class DriveTrain extends SubsystemBase {
 	private DifferentialDrive differentialDrive;
-	private SpeedController leftDrive;
-	private SpeedController rightDrive;
+	private SpeedControllerPIDWrapper leftDrive;
+	private SpeedControllerPIDWrapper rightDrive;
 
 	private Encoder leftDriveEncoder;
 	private Encoder rightDriveEncoder;
@@ -38,7 +38,7 @@ public class DriveTrain extends SubsystemBase {
 		var leftTop = new WPI_TalonSRX(3);
 		leftTop.setInverted(true);
 		leftDriveEncoder = new Encoder(0, 1, false, CounterBase.EncodingType.k4X);
-		leftDriveEncoder.setDistancePerPulse(Math.PI * 2 * (2.0 / 12) / 2048.0);
+		leftDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
 
 		var rightFront = new WPI_TalonSRX(4);
 		var rightBack = new WPI_TalonSRX(5);
@@ -47,14 +47,17 @@ public class DriveTrain extends SubsystemBase {
 		rightDriveEncoder = new Encoder(2, 3, false, CounterBase.EncodingType.k4X);
 		rightDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
 
+
 		leftDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(leftFront, leftBack, leftTop), leftDriveEncoder);
 		rightDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(rightFront, rightBack, rightTop), rightDriveEncoder);
 		
-		differentialDrive = new DifferentialDrive(
-			leftDrive, 
-			rightDrive
-		);
-  	}
+		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
+	}
+	  
+	public void setDrivePidEnabled(boolean pidEnabled) {
+		leftDrive.setPidEnabled(pidEnabled);
+		rightDrive.setPidEnabled(pidEnabled);
+	}
 
 	@Override
 	public void periodic() {

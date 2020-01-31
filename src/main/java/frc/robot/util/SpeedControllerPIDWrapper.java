@@ -23,8 +23,9 @@ public class SpeedControllerPIDWrapper implements SpeedController {
 
     private SpeedController speedController;
     private Encoder encoder;
-
     private double setSpeed;
+
+    private boolean pidEnabled;
     
     public SpeedControllerPIDWrapper(SpeedController speedController, Encoder encoder) {
         this.feedFowardController = new SimpleMotorFeedforward(0, PID_DRIVE_F);
@@ -33,17 +34,24 @@ public class SpeedControllerPIDWrapper implements SpeedController {
         this.speedController = speedController;
         this.encoder = encoder;
         this.setSpeed = 0;
+
+        this.pidEnabled = true;
     }
 
     public void set(double setSpeed) {
         this.setSpeed = setSpeed;
-        double pidOutput = pidController.calculate(encoder.getRate()/MAX_DRIVE_SPEED_FPS, setSpeed);
-        double feedFowardOutput = feedFowardController.calculate(setSpeed);
-        speedController.set(pidOutput + feedFowardOutput);
 
-        SmartDashboard.putNumber("p correction", pidOutput);
-        SmartDashboard.putNumber("f correction", feedFowardController.calculate(setSpeed));
+        if (pidEnabled) {
+            double pidOutput = pidController.calculate(encoder.getRate()/MAX_DRIVE_SPEED_FPS, setSpeed);
+            double feedFowardOutput = feedFowardController.calculate(setSpeed);
+            speedController.set(pidOutput + feedFowardOutput);
+        } else {
+            speedController.set(setSpeed);
+        }
+    }
 
+    public void setPidEnabled(boolean pidEnabled) {
+        this.pidEnabled = pidEnabled;
     }
 
     public double get() {

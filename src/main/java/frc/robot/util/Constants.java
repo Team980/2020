@@ -24,4 +24,6 @@ public final class Constants {
     public static final double MAX_DRIVE_SPEED_FPS = 16.0;
     public static final double WHEEL_RADIUS_FEET = 2.0 / 12.0; // 2 inches
 
+    public static final double TURN_DEADBAND = 0.1;
+	public static final double MOVE_DEADBAND = 0.1;
 }

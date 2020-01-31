@@ -13,4 +13,16 @@ public class Util {
         // https://www.arduino.cc/reference/en/language/functions/math/map/
         return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
+
+    public static double applyDeadband(double value, double deadband) {
+        if (Math.abs(value) > deadband) {
+            if (value > 0.0) {
+                return (value - deadband) / (1.0 - deadband);
+            } else {
+                return (value + deadband) / (1.0 - deadband);
+            }
+        } else {
+            return 0.0;
+        }
+    } 
 }
