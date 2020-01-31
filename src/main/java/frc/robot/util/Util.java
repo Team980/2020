@@ -5,20 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.util;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-public class ExampleSubsystem extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
-  public ExampleSubsystem() {
-
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+public class Util {
+    public static double map(double x, double inMin, double inMax, double outMin, double outMax) {
+        // this function is the spicy sauce
+        // https://www.arduino.cc/reference/en/language/functions/math/map/
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
 }

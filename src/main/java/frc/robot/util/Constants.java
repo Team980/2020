@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package frc.robot.util;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -16,4 +16,12 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final double PID_DRIVE_P = 1.0;
+	public static final double PID_DRIVE_I = 0.0;
+	public static final double PID_DRIVE_D = 0.0;
+    public static final double PID_DRIVE_F = 1.0;
+    
+    public static final double MAX_DRIVE_SPEED_FPS = 16.0;
+    public static final double WHEEL_RADIUS_FEET = 2.0 / 12.0; // 2 inches
+
 }
