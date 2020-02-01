@@ -39,6 +39,7 @@ public class DriveTrain extends SubsystemBase {
 		leftTop.setInverted(true);
 		leftDriveEncoder = new Encoder(0, 1, false, CounterBase.EncodingType.k4X);
 		leftDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
+		leftDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(leftFront, leftBack, leftTop), leftDriveEncoder);
 
 		var rightFront = new WPI_TalonSRX(4);
 		var rightBack = new WPI_TalonSRX(5);
@@ -46,9 +47,6 @@ public class DriveTrain extends SubsystemBase {
 		rightTop.setInverted(true);
 		rightDriveEncoder = new Encoder(2, 3, false, CounterBase.EncodingType.k4X);
 		rightDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
-
-
-		leftDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(leftFront, leftBack, leftTop), leftDriveEncoder);
 		rightDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(rightFront, rightBack, rightTop), rightDriveEncoder);
 		
 		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);

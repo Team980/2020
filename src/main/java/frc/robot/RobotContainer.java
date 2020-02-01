@@ -39,26 +39,20 @@ public class RobotContainer {
         colorWheelSpinner = new ColorWheelSpinner();
 
         driveTrain = new DriveTrain();
-        driveTrain.setDefaultCommand(new RunCommand(() -> 
-        driveTrain.arcadeDrive(-xBox.getY(Hand.kLeft) , xBox.getX(Hand.kRight) , driveTrain)));
-    );
-        /*driveTrain.setDefaultCommand(new RunCommand(() -> 
-            driveTrain.arcadeDrive(
-                applyDeadband(-xBox.getY(Hand.kLeft), MOVE_DEADBAND) , 
-                applyDeadband(xBox.getX(Hand.kRight), TURN_DEADBAND)
-            ), 
-            driveTrain)
-        );*/
         
+        driveTrain.setDefaultCommand(new RunCommand(
+            () -> driveTrain.arcadeDrive(-xBox.getY(Hand.kLeft), xBox.getX(Hand.kRight)), 
+            driveTrain
+        ));
+        
+        configureButtonBindings();
+    }
+
+    private void configureButtonBindings() {
         JoystickButton a = new JoystickButton(xBox, 1);
         a.whenPressed(() -> driveTrain.setDrivePidEnabled(true));
 
         JoystickButton b = new JoystickButton(xBox, 2);
         b.whenPressed(() -> driveTrain.setDrivePidEnabled(false));
-
-        configureButtonBindings();
-    }
-
-    private void configureButtonBindings() {
     }
 }
