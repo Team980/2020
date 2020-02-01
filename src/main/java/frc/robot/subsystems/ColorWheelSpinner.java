@@ -8,84 +8,119 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 
-public class ColorWheelSpinner extends SubsystemBase
-{
 
-  private final I2C.Port colorSensorPort = I2C.Port.kOnboard;
-  //sets up the special port for the color sensor
+public class ColorWheelSpinner extends SubsystemBase {
 
-  private final ColorSensorV3 colorSensor = new ColorSensorV3(colorSensorPort);
-  //creates the color sensor object at the color sensor port
+    private char gameData;
+   
 
-  private final ColorMatch colorMatcher = new ColorMatch();
-  //registers and detects known colors
+    private final I2C.Port colorSensorPort = I2C.Port.kOnboard;
+    //sets up the special port for the color sensor
+
+    private final ColorSensorV3 colorSensor = new ColorSensorV3(colorSensorPort);
+    //creates the color sensor object at the color sensor port
+
+    private final ColorMatch colorMatcher = new ColorMatch();
+    //registers and detects known colors
 
 
-  private final Color redTarget = ColorMatch.makeColor(0.47, 0.37, 0.15);//change this after testing
-  private final Color yellowTarget = ColorMatch.makeColor(0.31, 0.55, 0.13);//change this after testing
-  private final Color greenTarget = ColorMatch.makeColor(0.19, 0.55, 0.25);//change this after testing
-  private final Color blueTarget = ColorMatch.makeColor(0.15, 0.44, 0.40);//changet this after testing
+    private final Color red = ColorMatch.makeColor(0.47, 0.37, 0.15);
+    private final Color yellow = ColorMatch.makeColor(0.31, 0.55, 0.13);
+    private final Color green = ColorMatch.makeColor(0.19, 0.55, 0.25);
+    private final Color blue = ColorMatch.makeColor(0.15, 0.44, 0.40);
 
-  Color detectedColor;
-  ColorMatchResult closestColor;
-  //the numbers will be in the range of 0 to 1
+    Color detectedColor;
+    ColorMatchResult closestColor;
+    //the numbers will be in the range of 0 to 1
 
- 
-  Color[] colorsWeCareAbout = {redTarget,yellowTarget,greenTarget,blueTarget};  
+    Color[] colorsWeCareAbout = {red ,yellow, green, blue};
+    //group all of the the colors I care about   
 
-  public ColorWheelSpinner() 
-  {
-    for (Color color : colorsWeCareAbout)
-    {
-      colorMatcher.addColorMatch(color);
-    }
-  }
-
-  @Override
-  public void periodic()
-  {
-    detectedColor = colorSensor.getColor();
-    closestColor = colorMatcher.matchClosestColor(detectedColor);
+    Spark spark;
 
     String colorString;
+    //what color the sensor sees in a string
 
-    if (closestColor.color == blueTarget) {
-
-      colorString = "Blue";
-
-    } else if (closestColor.color == redTarget) {
-
-      colorString = "Red";
-
-    } else if (closestColor.color == greenTarget) {
-
-      colorString = "Green";
-
-    } else if (closestColor.color == yellowTarget) {
-
-      colorString = "Yellow";
-
-    } 
-    else
+    public ColorWheelSpinner() 
     {
-      colorString = "Unknown";
+        for (Color color : colorsWeCareAbout)
+        {
+            colorMatcher.addColorMatch(color);//add all of our colors to the black box
+        }
+
     }
 
-    SmartDashboard.putString("The Color: ", colorString);
+    @Override
+    public void periodic()
+    {
+        detectedColor = colorSensor.getColor();
+        closestColor = colorMatcher.matchClosestColor(detectedColor);
 
-    SmartDashboard.putNumber("Red: ", detectedColor.red);
-    SmartDashboard.putNumber("Green: ", detectedColor.green);
-    SmartDashboard.putNumber("Blue: ", detectedColor.blue);
+        toStringColor(closestColor);
 
-    SmartDashboard.putNumber("Confidence: ", closestColor.confidence);
-    
-  }
+        SmartDashboard.putString("The Color: ", colorString);
+        SmartDashboard.putNumber("Red: ", detectedColor.red);
+        SmartDashboard.putNumber("Green: ", detectedColor.green);
+        SmartDashboard.putNumber("Blue: ", detectedColor.blue);
+        SmartDashboard.putNumber("Confidence: ", closestColor.confidence);
+        
+    }
+
+    public Color targetColor() {
+        String gameString = DriverStation.getInstance().getGameSpecificMessage();
+        
+       
+            switch (gameString) {
+                case "":
+
+                break;
+                case"B":
+
+                break;
+                case "R":
+                
+                break;
+                case "Y":
+
+                break;
+            }
+        
+        else
+        {
+            // error
+        }
+    }
+
+    public void toStringColor(ColorMatchResult closestColor)//dont open
+    {
+        if (closestColor.color == blue)
+        {
+            colorString = "Blue";
+        }
+        else if (closestColor.color == red)
+        {
+            colorString = "Red";
+        }
+        else if (closestColor.color == green)
+        {
+            colorString = "Green";
+        } 
+        else if (closestColor.color == yellow) 
+        {
+            colorString = "Yellow";
+        } 
+        else
+        {
+            colorString = "Unknown";
+        }
+    }
 }
