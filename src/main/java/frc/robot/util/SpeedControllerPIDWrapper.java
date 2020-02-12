@@ -35,7 +35,7 @@ public class SpeedControllerPIDWrapper implements SpeedController {
         this.encoder = encoder;
         this.setSpeed = 0;
 
-        this.pidEnabled = true;
+        this.pidEnabled = DRIVE_PID_ENABLED_DEFAULT;
     }
 
     public void set(double setSpeed) {

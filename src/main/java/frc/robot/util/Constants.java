@@ -25,5 +25,26 @@ public final class Constants {
     public static final double WHEEL_RADIUS_FEET = 2.0 / 12.0; // 2 inches
 
     public static final double TURN_DEADBAND = 0.1;
-	public static final double MOVE_DEADBAND = 0.1;
+    public static final double MOVE_DEADBAND = 0.1;
+    
+
+
+    public static final int LEFT_FRONT_CAN_ID = 1;
+    public static final int LEFT_BACK_CAN_ID = 2;
+    public static final int LEFT_TOP_CAN_ID = 3;
+
+    public static final int RIGHT_FRONT_CAN_ID = 4;
+    public static final int RIGHT_BACK_CAN_ID = 5;
+    public static final int RIGHT_TOP_CAN_ID = 6;
+
+
+    public static final int LEFT_DRIVE_ENCODER_CHANNEL_A = 0;
+    public static final int LEFT_DRIVE_ENCODER_CHANNEL_B = 1;
+
+    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_A = 2;
+    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_B = 3;
+
+
+    public static final boolean DRIVE_PID_ENABLED_DEFAULT = false;
+
 }

@@ -27,18 +27,12 @@ import static frc.robot.util.Util.*;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
 
-    DriveTrain driveTrain;
-    ColorWheelSpinner colorWheelSpinner;
-
-    private XboxController xBox;
+    private static DriveTrain driveTrain = new DriveTrain();
+    private static ColorWheelSpinner colorWheelSpinner = new ColorWheelSpinner();
+    private static XboxController xBox = new XboxController(0);
 
     public RobotContainer() {
         // Configure the button bindings
-        xBox = new XboxController(0);
-
-        colorWheelSpinner = new ColorWheelSpinner();
-
-        driveTrain = new DriveTrain();
         
         driveTrain.setDefaultCommand(new RunCommand(
             () -> driveTrain.arcadeDrive(-xBox.getY(Hand.kLeft), xBox.getX(Hand.kRight)), 
