@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static frc.robot.util.Constants.*;
 /**
@@ -28,7 +27,7 @@ public class SpeedControllerPIDWrapper implements SpeedController {
     private boolean pidEnabled;
     
     public SpeedControllerPIDWrapper(SpeedController speedController, Encoder encoder) {
-        this.feedFowardController = new SimpleMotorFeedforward(0, PID_DRIVE_F);
+        this.feedFowardController = new SimpleMotorFeedforward(PID_DRIVE_F_kSPower, PID_DRIVE_F_kSPowerSecondsPerFoot);
         this.pidController = new PIDController(PID_DRIVE_P, PID_DRIVE_I, PID_DRIVE_D);
 
         this.speedController = speedController;
@@ -42,7 +41,7 @@ public class SpeedControllerPIDWrapper implements SpeedController {
         this.setSpeed = setSpeed;
 
         if (pidEnabled) {
-            double pidOutput = pidController.calculate(encoder.getRate()/MAX_DRIVE_SPEED_FPS, setSpeed);
+            double pidOutput = pidController.calculate(encoder.getRate()/MAX_DRIVE_SPEED_FPS_LOW, setSpeed);
             double feedFowardOutput = feedFowardController.calculate(setSpeed);
             speedController.set(pidOutput + feedFowardOutput);
         } else {

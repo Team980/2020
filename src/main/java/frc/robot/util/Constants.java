@@ -16,18 +16,26 @@ package frc.robot.util;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final double PID_DRIVE_P = 1.0;
+    //low gear PID constants
+    public static final double PID_DRIVE_P = 1.0;//TODO: tune constants for low gear
 	public static final double PID_DRIVE_I = 0.0;
 	public static final double PID_DRIVE_D = 0.0;
-    public static final double PID_DRIVE_F = 1.0;
-    
-    public static final double MAX_DRIVE_SPEED_FPS = 16.0;
+    public static final double PID_DRIVE_F_kSPower = 1.0;//power necessary to barely start the wheel rotating from 0-1
+    public static final double PID_DRIVE_F_kSPowerSecondsPerFoot = 1.0;//power to maintain a speed, calc based on 1 to maintain max speed
+
+    //high gear PID constants
+    public static final double HIGH_PID_DRIVE_P = 1.0;//TODO: tune constants for high gear
+	public static final double HIGH_PID_DRIVE_I = 0.0;
+	public static final double HIGH_PID_DRIVE_D = 0.0;
+    public static final double HIGH_PID_DRIVE_F_kSPower = 1.0;//power necessary to barely start the wheel rotating from 0-1
+    public static final double HIGH_PID_DRIVE_F_kSPowerSecondsPerFoot = 1.0;//power to maintain a speed, calc based on 1 to maintain max speed
+
+    public static final double MAX_DRIVE_SPEED_FPS_HIGH = 16.0;//TODO: find max high gear speed
+    public static final double MAX_DRIVE_SPEED_FPS_LOW = 4.0;//TODO: find max low gear speed
     public static final double WHEEL_RADIUS_FEET = 2.0 / 12.0; // 2 inches
 
     public static final double TURN_DEADBAND = 0.1;
     public static final double MOVE_DEADBAND = 0.1;
-    
-
 
     public static final int LEFT_FRONT_CAN_ID = 1;
     public static final int LEFT_BACK_CAN_ID = 2;
