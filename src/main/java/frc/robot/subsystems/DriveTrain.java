@@ -63,6 +63,8 @@ public class DriveTrain extends SubsystemBase {
 	}
 
   	public void arcadeDrive(double move, double turn) {
+		SmartDashboard.putNumber("Throttle", move);//to help with finding the feed forward Ks coefficient
+		SmartDashboard.putNumber("Steering", turn);
 		differentialDrive.arcadeDrive(move, turn);
 	}
 }
