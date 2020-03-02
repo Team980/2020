@@ -14,6 +14,10 @@ public class Util {
         return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
+    public static double degreesToRadians(double degrees) {
+        return degrees * Math.PI/180;
+    }
+
     public static double applyDeadband(double value, double deadband) {
         if (Math.abs(value) > deadband) {
             if (value > 0.0) {

@@ -7,145 +7,168 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import com.revrobotics.ColorSensorV3;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static frc.robot.util.Constants.*;
 
-public class ColorWheelSpinner extends SubsystemBase {
-   
-    private String[] hackyCircularChart = {"R", "G", "B", "Y", "R", "G", "B","Y", "R", "G", "B", "Y"};//start index at 4 end at 8
-    //default is clockwise
+public class ColorWheelSpinner extends SubsystemBase {    
 
-    private final Spark spark = new Spark(10);
+    private Color lookingAt;
+    private Color targetColor;
 
-    private final I2C.Port colorSensorPort = I2C.Port.kOnboard;
-    //sets up the special port for the color sensor
+    private boolean hasTargetColor;
 
-    private final ColorSensorV3 colorSensor = new ColorSensorV3(colorSensorPort);
-    //creates the color sensor object at the color sensor port
+    private final ColorSensorV3 colorSensor;
+    private ColorMatch colorMatcher = new ColorMatch();
 
-    private final ColorMatch colorMatcher = new ColorMatch();
-    //registers and detects known colors
+    enum WheelColor {
+        RED, GREEN, BLUE, YELLOW;
 
-    private final Color Red = ColorMatch.makeColor(0.47, 0.37, 0.15);
-    private final Color Green = ColorMatch.makeColor(0.19, 0.55, 0.25);
-    private final Color Blue = ColorMatch.makeColor(0.15, 0.44, 0.40);
-    private final Color Yellow = ColorMatch.makeColor(0.31, 0.55, 0.13);
+        WheelColor() {}
 
-    Color detectedColor;
-    ColorMatchResult closestColor;
-    //the numbers will be in the range of 0 to 1
+        public static WheelColor fromColor(Color color) {
 
-    Color[] colorsWeCareAbout = {Red, Green, Blue, Yellow};
-    //group all of the the colors I care about   
-
-    String colorString;
-    //what color the sensor sees in a string
-
-    public ColorWheelSpinner() 
-    {
-        for (Color color : colorsWeCareAbout)
-        {
-            colorMatcher.addColorMatch(color);//add all of our colors to the black box
         }
-    
+
+        public static WheelColor fromString(String color) {
+
+        }
     }
+
+    public ColorWheelSpinner() {
+        colorSensor = new ColorSensorV3(COLOR_SENSOR_PORT);
+        colorMatcher = new ColorMatch();
+        colorMatcher.addColorMatch(RED);
+        colorMatcher.addColorMatch(GREEN);
+        colorMatcher.addColorMatch(BLUE);
+        colorMatcher.addColorMatch(YELLOW);
+
+    }
+
+    public void runPositionControl() {
+        if (!hasTargetColor) {
+            String gameSpecificMessage = DriverStation.getInstance().getGameSpecificMessage();
+
+            if (gameSpecificMessage.length() > 0) {
+                Color color;
+                switch (gameSpecificMessage.charAt(0)) {
+                    case 'R': color = RED; break;
+                    case 'G': color = GREEN; break;
+                    case 'B': color = BLUE; break;
+                    case 'Y': color = YELLOW; break;
+                }
+                hasTargetColor = true;    
+            }
+        }
+
+        if (!hasTargetColor) return;
+
+        ColorMatchResult colorMatchResult = colorMatcher.matchClosestColor(colorSensor.getColor());
+        if (colorMatchResult.confidence > COLOR_MATCHER_CONFIDENCE_THRESHOLD) {
+            lookingAt = colorMatchResult.color;
+
+
+        }
+
+
+
+
+
+    }
+
+    public void runRotationControl() {
+    }
+
+    
+
 
     @Override
-    public void periodic()
-    {
-        detectedColor = colorSensor.getColor();
-        closestColor = colorMatcher.matchClosestColor(detectedColor);
+    public void periodic() {
+        // report info and stuff
 
-        toStringColor(closestColor);
-
-        SmartDashboard.putString("The Color: ", colorString);
-        SmartDashboard.putNumber("Red: ", detectedColor.red);
-        SmartDashboard.putNumber("Green: ", detectedColor.green);
-        SmartDashboard.putNumber("Blue: ", detectedColor.blue);
-        SmartDashboard.putNumber("Confidence: ", closestColor.confidence);
-        
     }
 
-    public void goToColor() 
-    {
-        String gameString = DriverStation.getInstance().getGameSpecificMessage();
+    private static int getColorIndex(Color color) {
+        if (color.equals(RED)) {
+            return 0;
+        } else if (color.equals(GREEN)) {
+            return 1;
+        } else if (color.equals(BLUE)) {
+            return 2;
+        } else if (color.equals(YELLOW)) {
+            return 3;
+        } else {
+            return -1;
+        }
+    }
+    
+    private static double getTargetDirection(Color start, Color end) {
+        int clockwise = (getColorIndex(end)-getColorIndex(start)) % 4;
+        int counterClockwise = (-clockwise) % 4;
 
-        if(gameString == "" || gameString == colorString)
-        {
-            spark.set(0);
+        if (start.equals(end)) {
+            return 0;
+        } else if (clockwise < counterClockwise) {
+            return -1;
+        } else {
+            return 1;
         }
-        else
-        {
-            int Direction = (leftTurnDistance(gameString)-rightTurnDistance(gameString)) > 0 ? 1: -1;
-            spark.set(Direction);
-        }
-        
-    }
-    private int leftTurnDistance(String currentColor)
-    {
-        int startIndex = arrayIndexOf(hackyCircularChart,currentColor) + 4;
-        for(int i = startIndex; i > 0; i--)
-        {
-            if(colorString == hackyCircularChart[i])
-            {
-                return startIndex - i;
-            }
-        }
-        return 0;
-    }
-    private int rightTurnDistance( String current)
-    {
-        int startIndex = arrayIndexOf(hackyCircularChart,current) + 4;
-        for (int i = startIndex; i < hackyCircularChart.length; i++)
-        {
-            if(colorString == hackyCircularChart[i])
-            {
-                return i-startIndex;
-            }
-        }
-        return 0;
-    }
-    private int arrayIndexOf(String[] array, String item)
-    {
-        for (int i = 0; i < array.length; i++) 
-        {
-            if(array[i] == item)
-            {
-                return i;
-            }   
-        }
-        return -1;
     }
 
-    private void toStringColor(ColorMatchResult closestColor)//dont open
-    {
-        if (closestColor.color == Blue)
-        {
-            colorString = "B";
-        }
-        else if (closestColor.color == Red)
-        {
-            colorString = "R";
-        }
-        else if (closestColor.color == Green)
-        {
-            colorString = "G";
-        } 
-        else if (closestColor.color == Yellow) 
-        {
-            colorString = "Y";
-        } 
-        else
-        {
-            colorString = "Unknown";
-        }
-    }
+    // private static double lookup(Color currentColor, Color targetColor) {
+    //     for (Response response : responses) {
+    //         if (response.matches(currentColor, targetColor)) {
+    //             return response.responseSpeed;
+    //         }
+    //     }
+    // }
+    // private static final Response[] responses = {
+    //     new Response(RED,    RED,    0, 0), 
+    //     new Response(RED,    GREEN,  1, 3),
+    //     new Response(RED,    BLUE,   2, 2),
+    //     new Response(RED,    YELLOW, 3, 1),
+    //     new Response(GREEN,  RED,    3, 1),
+    //     new Response(GREEN,  GREEN,  0, 0),
+    //     new Response(GREEN,  BLUE,   1, 3),
+    //     new Response(GREEN,  YELLOW, 2, 2),
+    //     new Response(BLUE,   RED,    2, 2),
+    //     new Response(BLUE,   GREEN,  3, 1),
+    //     new Response(BLUE,   BLUE,   0, 0),
+    //     new Response(BLUE,   YELLOW, 1, 3),
+    //     new Response(YELLOW, RED,    1, 3),
+    //     new Response(YELLOW, GREEN,  2, 2),
+    //     new Response(YELLOW, BLUE,   3, 1),
+    //     new Response(YELLOW, YELLOW, 0, 0)
+    // };  
+        // private class Response {
+    //     private Color currentColor;
+    //     private Color targetColor;
+    //     // these refer to the actual field element's rotation, our motor spins opposite
+    //     private int clockwiseDistance; 
+    //     private int counterclockwiseDistance;
+
+    //     Response(Color currentColor, Color targetColor, int clockwiseDistance, int counterclockwiseDistance) {
+    //         this.currentColor = currentColor;
+    //         this.targetColor = targetColor;
+    //         this.clockwiseDistance = clockwiseDistance;
+    //         this.counterclockwiseDistance = counterclockwiseDistance;
+    //     }
+
+    //     private double getTurnSpeed() {
+    //         if (clockwiseDistance < counterclockwiseDistance) {
+
+    //         }
+    //     }
+
+    //     private boolean matches(Color currentColor, Color targetColor) {
+    //         return this.currentColor.equals(currentColor) 
+    //             && this.targetColor.equals(targetColor);
+    //     }
+    // }
+
 }

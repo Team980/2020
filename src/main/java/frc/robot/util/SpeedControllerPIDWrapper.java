@@ -27,8 +27,8 @@ public class SpeedControllerPIDWrapper implements SpeedController {
     private boolean pidEnabled;
     
     public SpeedControllerPIDWrapper(SpeedController speedController, Encoder encoder) {
-        this.feedFowardController = new SimpleMotorFeedforward(PID_DRIVE_F_kSPower, PID_DRIVE_F_kSPowerSecondsPerFoot);
-        this.pidController = new PIDController(PID_DRIVE_P, PID_DRIVE_I, PID_DRIVE_D);
+        this.feedFowardController = new SimpleMotorFeedforward(LOW_PID_DRIVE_F_KS, LOW_PID_DRIVE_F_KV);
+        this.pidController = new PIDController(LOW_PID_DRIVE_P, LOW_PID_DRIVE_I, LOW_PID_DRIVE_D);
 
         this.speedController = speedController;
         this.encoder = encoder;
