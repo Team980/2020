@@ -13,8 +13,10 @@ public class ConstantRateShooter extends CommandBase {
   /**
    * Creates a new ConstantRateShooter.
    */
-  public ConstantRateShooter() {
+  int percentPower;
+  public ConstantRateShooter(int percPower) {
     // Use addRequirements() here to declare subsystem dependencies.
+    percentPower = percPower;
   }
 
   // Called when the command is initially scheduled.

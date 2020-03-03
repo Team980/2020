@@ -49,8 +49,8 @@ public class ColorWheelSpinnerAidan extends SubsystemBase {
     String colorString;
     //what color the sensor sees in a string
 
-    public ColorWheelSpinner() {
-        spinner = new Spark();
+    public ColorWheelSpinnerAidan() {
+        spinner = new Spark(0);
 
 
         for (Color color : colorsWeCareAbout) {
@@ -91,6 +91,8 @@ public class ColorWheelSpinnerAidan extends SubsystemBase {
                 return startIndex - i;
             }
         }
+
+        return -1;
     }
     private int rightTurnDistance( String current) {
         int startIndex = arrayIndexOf(hackyCircularChart,current) + 4;
@@ -99,6 +101,8 @@ public class ColorWheelSpinnerAidan extends SubsystemBase {
                 return i-startIndex;
             }
         }
+
+        return -1;
     }
     private int arrayIndexOf(String[] array, String item) {
         for (int i = 0; i < array.length; i++) {
@@ -106,6 +110,8 @@ public class ColorWheelSpinnerAidan extends SubsystemBase {
                 return i;
             }   
         }
+
+        return -1;
     }
 
     private void toStringColor(ColorMatchResult closestColor) {

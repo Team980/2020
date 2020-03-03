@@ -7,41 +7,30 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.util.Constants.*;
+import frc.robot.util.Constants;
 
 public class ColorWheelSpinner extends SubsystemBase {    
+    private WheelColor lookingAt = WheelColor.UNKNOWN;
+    private WheelColor targetColor = WheelColor.UNKNOWN;
 
-    private Color lookingAt;
-    private Color targetColor;
+    private WheelColor lastSeen = WheelColor.UNKNOWN;
 
-    private boolean hasTargetColor;
+    private final ColorSensorV3 colorSensor = new ColorSensorV3(COLOR_SENSOR_PORT);
+    private ColorMatch colorMatcher;
 
-    private final ColorSensorV3 colorSensor;
-    private ColorMatch colorMatcher = new ColorMatch();
-
-    enum WheelColor {
-        RED, GREEN, BLUE, YELLOW;
-
-        WheelColor() {}
-
-        public static WheelColor fromColor(Color color) {
-
-        }
-
-        public static WheelColor fromString(String color) {
-
-        }
-    }
+    private final WPI_TalonSRX motor = new WPI_TalonSRX(SPINNER_TALON_CHANNEL);
 
     public ColorWheelSpinner() {
-        colorSensor = new ColorSensorV3(COLOR_SENSOR_PORT);
         colorMatcher = new ColorMatch();
         colorMatcher.addColorMatch(RED);
         colorMatcher.addColorMatch(GREEN);
@@ -50,65 +39,65 @@ public class ColorWheelSpinner extends SubsystemBase {
 
     }
 
+    
+
+
     public void runPositionControl() {
-        if (!hasTargetColor) {
-            String gameSpecificMessage = DriverStation.getInstance().getGameSpecificMessage();
+        double output = 0;
 
-            if (gameSpecificMessage.length() > 0) {
-                Color color;
-                switch (gameSpecificMessage.charAt(0)) {
-                    case 'R': color = RED; break;
-                    case 'G': color = GREEN; break;
-                    case 'B': color = BLUE; break;
-                    case 'Y': color = YELLOW; break;
-                }
-                hasTargetColor = true;    
-            }
-        }
+        if (!lookingAt.equals(WheelColor.UNKNOWN) && !targetColor.equals(WheelColor.UNKNOWN)) {
+            output = getTargetDirection(lookingAt, targetColor);
+        } 
 
-        if (!hasTargetColor) return;
-
-        ColorMatchResult colorMatchResult = colorMatcher.matchClosestColor(colorSensor.getColor());
-        if (colorMatchResult.confidence > COLOR_MATCHER_CONFIDENCE_THRESHOLD) {
-            lookingAt = colorMatchResult.color;
-
-
-        }
-
-
-
-
-
+        motor.set(output);
     }
 
-    public void runRotationControl() {
+    public boolean rotationControlColorTransition() {
+        boolean result = !lastSeen.equals(lookingAt);
+        lastSeen = lookingAt;
+
+        return result;
+    }
+
+    private void tryUpdate() {
+        // target color 
+        if (targetColor.equals(WheelColor.UNKNOWN)) {
+            String gameSpecificMessage = DriverStation.getInstance().getGameSpecificMessage();
+            targetColor = WheelColor.fromString(gameSpecificMessage);
+        } 
+
+        // looking at 
+        ColorMatchResult colorMatchResult = colorMatcher.matchClosestColor(colorSensor.getColor());
+        if (colorMatchResult.confidence > COLOR_MATCHER_CONFIDENCE_THRESHOLD) {
+            lookingAt = WheelColor.fromColor(colorMatchResult.color);
+        }
     }
 
     
+    public boolean isAtPositionTarget() {
+        return  lookingAt.equals(targetColor)
+            && !lookingAt.equals(WheelColor.UNKNOWN); 
+    }
+
+
+    public void stopMotors() {
+        motor.stopMotor();
+    }
 
 
     @Override
     public void periodic() {
         // report info and stuff
+        tryUpdate();
 
+
+        SmartDashboard.putString("spinner target color", targetColor.toString());
+        SmartDashboard.putString("looking at color", lookingAt.toString());
     }
 
-    private static int getColorIndex(Color color) {
-        if (color.equals(RED)) {
-            return 0;
-        } else if (color.equals(GREEN)) {
-            return 1;
-        } else if (color.equals(BLUE)) {
-            return 2;
-        } else if (color.equals(YELLOW)) {
-            return 3;
-        } else {
-            return -1;
-        }
-    }
     
-    private static double getTargetDirection(Color start, Color end) {
-        int clockwise = (getColorIndex(end)-getColorIndex(start)) % 4;
+    private static double getTargetDirection(WheelColor start, WheelColor end) {
+        int clockwise = (end.ordinal()-start.ordinal()) % 4;
         int counterClockwise = (-clockwise) % 4;
 
         if (start.equals(end)) {
@@ -120,6 +109,54 @@ public class ColorWheelSpinner extends SubsystemBase {
         }
     }
 
+    enum WheelColor {
+        RED, GREEN, BLUE, YELLOW, UNKNOWN;
+
+        WheelColor() {
+        }
+
+        public static WheelColor fromColor(Color color) {
+            if (color.equals(Constants.RED)) {
+                return WheelColor.RED;
+            } else if (color.equals(Constants.GREEN)) {
+                return WheelColor.GREEN;
+            } else if (color.equals(Constants.BLUE)) {
+                return WheelColor.BLUE;
+            } else if (color.equals(Constants.YELLOW)) {
+                return WheelColor.YELLOW;
+            } else {
+                return WheelColor.UNKNOWN;
+            }
+        }
+
+        public static WheelColor fromString(String color) {
+            if (color.length() > 0) {
+                switch (color.charAt(0)) {
+                    case 'R': return WheelColor.RED; 
+                    case 'G': return WheelColor.GREEN; 
+                    case 'B': return WheelColor.BLUE; 
+                    case 'Y': return WheelColor.YELLOW; 
+                    default: return WheelColor.UNKNOWN; 
+                }
+            }
+            return WheelColor.UNKNOWN;
+        }
+    }
+
+
+    // private static int getColorIndex(Color color) {
+    //     if (color.equals(RED)) {
+    //         return 0;
+    //     } else if (color.equals(GREEN)) {
+    //         return 1;
+    //     } else if (color.equals(BLUE)) {
+    //         return 2;
+    //     } else if (color.equals(YELLOW)) {
+    //         return 3;
+    //     } else {
+    //         return -1;
+    //     }
+    // }
     // private static double lookup(Color currentColor, Color targetColor) {
     //     for (Response response : responses) {
     //         if (response.matches(currentColor, targetColor)) {

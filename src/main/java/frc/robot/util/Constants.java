@@ -70,6 +70,7 @@ public final class Constants {
     public static final double LIMELIGHT_VERTICAL_FOV_RADIANS = Util.degreesToRadians(41);
     public static final double LIMELIGHT_HORIZONTAL_FOV_RADIANS = Util.degreesToRadians(54);
 
+    public static final int SHOOTER_GATEKEEPER_SOLENOID_CHANNEL = 0; // todo: insert
     public static final int SHOOTER_TALON_CHANNEL = 0;
     public static final int SHOOTER_ENCODER_CHANNEL_A = 0; // TODO: channels
     public static final int SHOOTER_ENCODER_CHANNEL_B = 1;
@@ -78,9 +79,18 @@ public final class Constants {
     public static final double SHOOTER_P = .1;
     public static final double SHOOTER_I = 0;
     public static final double SHOOTER_D = .0005;
-    public static double SHOOTER_FEEDFORWARD_KS = .05;//volts necessary to barely start the wheel rotating
-    public static double SHOOTER_FEEDFORWARD_KV = 12.0 / SHOOTER_RPS_MAX; //volts to maintain a speed, calc based on 12V to maintain max speed
+    public static final double SHOOTER_FEEDFORWARD_KS = .05;//volts necessary to barely start the wheel rotating
+    public static final double SHOOTER_FEEDFORWARD_KV = 12.0 / SHOOTER_RPS_MAX; //volts to maintain a speed, calc based on 12V to maintain max speed
       
+
+    public static final int INTAKE_DEPLOY_SOLENOID_CHANNEL = 15; // todo: put
+    public static final int INTAKE_TALON_LEFT_CHANNEL = 15; // todo: put
+    public static final int BELT_CHANNEL = 15;
+    public static final int INTAKE_TALON_RIGHT_CHANNEL = 15; // todo: put
+    public static final double INTAKE_SPEED = 0.8;
+
+    public static final int SPINNER_TALON_CHANNEL = 0; // todo: stuff
+
     public static final double COLOR_MATCHER_CONFIDENCE_THRESHOLD = 0.6;
     public static final I2C.Port COLOR_SENSOR_PORT = I2C.Port.kOnboard;
     public static final Color RED = ColorMatch.makeColor(0.47, 0.37, 0.15);

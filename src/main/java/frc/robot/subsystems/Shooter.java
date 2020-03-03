@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -21,6 +22,7 @@ public class Shooter extends PIDSubsystem {
   private SpeedController motor;
   private Encoder shootEncoder;
   private SimpleMotorFeedforward shootFF;
+  private final Solenoid gateKeeperSolenoid = new Solenoid(SHOOTER_GATEKEEPER_SOLENOID_CHANNEL); // prevents balls from enabled
   /**
    * Creates a new ShooterPIDSubsystem.
    */
