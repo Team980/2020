@@ -5,39 +5,35 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
 
-public class ConstantRateShooter extends CommandBase {
-  /**
-   * Creates a new ConstantRateShooter.
-   */
-  private Shooter shooter;
-  private double power;
-  public ConstantRateShooter(Shooter shooter, double power) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.shooter = shooter;
-    this.power = power;
+public class RunBelt extends CommandBase {
+  private Belt belt;
+  private double speed;
+  
+  public RunBelt(Belt belt, double speed) {
+    this.belt = belt;
+    this.speed = speed;
+    addRequirements(belt);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setGatekeeperOpen(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.fire(power);
+    belt.run(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setGatekeeperOpen(false);
+    belt.run(0);
   }
 
   // Returns true when the command should end.

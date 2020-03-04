@@ -38,6 +38,10 @@ public class Shooter extends PIDSubsystem {
     shootFF = new SimpleMotorFeedforward(SHOOTER_FEEDFORWARD_KS, SHOOTER_FEEDFORWARD_KV);
   }
 
+  public void setGatekeeperOpen(boolean open) {
+    gateKeeperSolenoid.set(open);
+  }
+
   public void fire(double targetRPS){
     setSetpoint(targetRPS);
   }

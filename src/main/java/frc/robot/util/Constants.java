@@ -82,10 +82,13 @@ public final class Constants {
     public static final double SHOOTER_FEEDFORWARD_KS = .05;//volts necessary to barely start the wheel rotating
     public static final double SHOOTER_FEEDFORWARD_KV = 12.0 / SHOOTER_RPS_MAX; //volts to maintain a speed, calc based on 12V to maintain max speed
       
+    public static final int PICKUP_ROLLER__SOLENOID_CHANNEL = 3; // todo: find
+    public static final boolean PICKUP_ROLLER_DEPLOY_SOLENOID_SET_DEPLOYED = true; // todo: find
 
-    public static final int INTAKE_DEPLOY_SOLENOID_CHANNEL = 15; // todo: put
+    public static final int BELT_TALON_CHANNEL = 15;
+    public static final double BELT_SPEED = 0.8;
+
     public static final int INTAKE_TALON_LEFT_CHANNEL = 15; // todo: put
-    public static final int BELT_CHANNEL = 15;
     public static final int INTAKE_TALON_RIGHT_CHANNEL = 15; // todo: put
     public static final double INTAKE_SPEED = 0.8;
 

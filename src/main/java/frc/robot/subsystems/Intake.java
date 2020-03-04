@@ -18,45 +18,21 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Intake extends SubsystemBase
  {
-    Solenoid boundaryExtender;
-
-    WPI_TalonSRX leftIntakeMotor;
-    WPI_TalonSRX rightIntakeMotor;
-
-    WPI_TalonSRX belt;
-   
-    SpeedControllerGroup intakeRollers;
-
-    boolean powerOn = false;
+    private SpeedControllerGroup intakeRollers;
     
     public Intake()
     {
-      boundaryExtender = new Solenoid(INTAKE_DEPLOY_SOLENOID_CHANNEL);
-
-      rightIntakeMotor = new WPI_TalonSRX(INTAKE_TALON_RIGHT_CHANNEL);
-      leftIntakeMotor = new WPI_TalonSRX(INTAKE_TALON_LEFT_CHANNEL);
+      WPI_TalonSRX leftIntakeMotor = new WPI_TalonSRX(INTAKE_TALON_LEFT_CHANNEL);
       leftIntakeMotor.setInverted(true);
-      intakeRollers = new SpeedControllerGroup(leftIntakeMotor,rightIntakeMotor);
+      WPI_TalonSRX rightIntakeMotor = new WPI_TalonSRX(INTAKE_TALON_RIGHT_CHANNEL);
+      intakeRollers = new SpeedControllerGroup(leftIntakeMotor, rightIntakeMotor);
+    }
 
-      belt = new WPI_TalonSRX(BELT_CHANNEL);
-
-      powerOn = false;
+    public void run(double speed) {
+      intakeRollers.set(speed);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("belt: ", belt.get());
-      SmartDashboard.putBoolean("solenoid position: ", boundaryExtender.get());
-      SmartDashboard.putNumber("Left Intake: ", leftIntakeMotor.get());
-      SmartDashboard.putNumber("Right Intake: ", rightIntakeMotor.get());
-    }
-    public void toggle(double beltPower)//happens after release
-    {
-      beltPower = powerOn ? beltPower : 0;
-      boundaryExtender.set(powerOn);
-      intakeRollers.set(beltPower);
-      belt.set(beltPower);
-
-      powerOn = !powerOn;
     }
 }
