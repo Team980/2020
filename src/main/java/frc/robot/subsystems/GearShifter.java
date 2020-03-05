@@ -7,27 +7,18 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.DavisDealWithThis;
 
-public class PickupRoller extends SubsystemBase {
-  private Solenoid solenoid;
-  public PickupRoller() {
-    solenoid = new Solenoid(DavisDealWithThis.PICKUP_ROLLER__SOLENOID_CHANNEL);
-  }
+public class GearShifter extends SubsystemBase {
+  /**
+   * Creates a new GearShifter.
+   */
+  public GearShifter() {
 
-  public void toggleDeployed() {
-    solenoid.set(!solenoid.get());
-  }
-
-  public void setDeployed(boolean isDeployed) {
-    solenoid.set(isDeployed == DavisDealWithThis.PICKUP_ROLLER_DEPLOY_SOLENOID_SET_DEPLOYED);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("pickup roller deployed", solenoid.get());
+    // This method will be called once per scheduler run
   }
 }

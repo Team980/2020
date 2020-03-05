@@ -8,39 +8,33 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Belt;
 
-public class ConstantRateShooter extends CommandBase {
-  /**
-   * Creates a new ConstantRateShooter.
-   */
-  private Shooter shooter;
-  private double targetRate;
-  public ConstantRateShooter(Shooter shooter, double targetRate) {
-    this.shooter = shooter;
-    this.targetRate = targetRate;//rate should be in RPM
-    addRequirements(shooter);
+public class RunBelt extends CommandBase {
+  private Belt belt;
+  private double speed;
+  
+  public RunBelt(Belt belt, double speed) {
+    this.belt = belt;
+    this.speed = speed;
+    addRequirements(belt);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.enable();
-    shooter.setGatekeeperOpen(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.fire(targetRate / 60.0);//convert to RPS
+    belt.run(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.fire(0);
-    shooter.setGatekeeperOpen(false);
-    shooter.disable();
+    belt.run(0);
   }
 
   // Returns true when the command should end.

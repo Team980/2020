@@ -63,8 +63,8 @@ public final class DavisDealWithThis {
 
     public static final boolean DRIVE_PID_ENABLED_DEFAULT = false;
 
-    public static final int SHIFTER_SOLENOID_A = 0;//todo: let davis deal with this
-    public static final int SHIFTER_SOLENOID_B = 0;
+    public static final int SHIFTER_SOLENOID_HIGH_CHANNEL = 0;//todo: let davis deal with this
+    public static final int SHIFTER_SOLENOID_LOW_CHANNEL = 1;
 
     public static final int WHEEL_ROTATIONS = 3;
     public static final int COLORS_PER_ROTATION = 8;
@@ -78,29 +78,30 @@ public final class DavisDealWithThis {
     public static final double LIMELIGHT_VERTICAL_FOV_RADIANS = Util.degreesToRadians(41);
     public static final double LIMELIGHT_HORIZONTAL_FOV_RADIANS = Util.degreesToRadians(54);
 
-    public static final int SHOOTER_GATEKEEPER_SOLENOID_CHANNEL = 0; // todo: insert
-    public static final int SHOOTER_TALON_CHANNEL = 0;
-    public static final int SHOOTER_ENCODER_CHANNEL_A = 0; // TODO: channels
-    public static final int SHOOTER_ENCODER_CHANNEL_B = 1;
+    public static final int SHOOTER_GATEKEEPER_SOLENOID_CLOSED_CHANNEL = 4; // TODO: elec match
+    public static final int SHOOTER_GATEKEEPER_SOLENOID_OPENED_CHANNEL = 5; // TODO: elec match
+    public static final int SHOOTER_TALON_CHANNEL = 10;//TODO: elec match
+    public static final int SHOOTER_ENCODER_CHANNEL_A = 4; // TODO: elec match
+    public static final int SHOOTER_ENCODER_CHANNEL_B = 5;
     public static final double SHOOTER_ENCODER_DISTANCE_PER_PULSE = 1.0 / 360.0;
-    public static final double SHOOTER_RPS_MAX = 4000.0 / 60.0;
+    public static final double SHOOTER_RPS_MAX = 4000.0 / 60.0;//TODO: find real max
     public static final double SHOOTER_P = .1;
     public static final double SHOOTER_I = 0;
     public static final double SHOOTER_D = .0005;
     public static final double SHOOTER_FEEDFORWARD_KS = .05;//volts necessary to barely start the wheel rotating
     public static final double SHOOTER_FEEDFORWARD_KV = 12.0 / SHOOTER_RPS_MAX; //volts to maintain a speed, calc based on 12V to maintain max speed
       
-    public static final int PICKUP_ROLLER__SOLENOID_CHANNEL = 3; // todo: find
-    public static final boolean PICKUP_ROLLER_DEPLOY_SOLENOID_SET_DEPLOYED = true; // todo: find
+    public static final int PICKUP_ROLLER_DEPLOYED_SOLENOID_CHANNEL = 2; // todo: find
+    public static final int PICKUP_ROLLER_RETRACT_SOLENOID_CHANNEL = 3; // todo: find
 
-    public static final int BELT_TALON_CHANNEL = 15;
+    public static final int BELT_TALON_CHANNEL = 11;// TODO: elec match
     public static final double BELT_SPEED = 0.8;
 
-    public static final int INTAKE_TALON_LEFT_CHANNEL = 15; // todo: put
-    public static final int INTAKE_TALON_RIGHT_CHANNEL = 15; // todo: put
+    public static final int INTAKE_TALON_LEFT_CHANNEL = 12; // TODO: elec match
+    public static final int INTAKE_TALON_RIGHT_CHANNEL = 13; // TODO: elec match
     public static final double INTAKE_SPEED = 0.8;
 
-    public static final int SPINNER_TALON_CHANNEL = 0; // todo: stuff
+    public static final int SPINNER_TALON_CHANNEL = 15; // TODO: elec match
 
     public static final double COLOR_MATCHER_CONFIDENCE_THRESHOLD = 0.6;
     public static final I2C.Port COLOR_SENSOR_PORT = I2C.Port.kOnboard;

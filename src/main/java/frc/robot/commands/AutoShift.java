@@ -5,18 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveTrain;
 
-public class RunBelt extends CommandBase {
-  private Belt belt;
-  private double speed;
-  
-  public RunBelt(Belt belt, double speed) {
-    this.belt = belt;
-    this.speed = speed;
-    addRequirements(belt);
+public class AutoShift extends CommandBase {
+  DriveTrain driveTrain;
+  int gearSelector;//0 auto, 1 low, 2 high
+  /**
+   * Creates a new AutoShift.
+   */
+  public AutoShift(DriveTrain driveTrain , int gearSelector) {
+    this.driveTrain = driveTrain;
+    this.gearSelector = gearSelector;
+
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -27,13 +31,17 @@ public class RunBelt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    belt.run(speed);
+		if (Math.abs(driveTrain.getLeftEncoder().getRate()) > 4.5 || Math.abs(driveTrain.getRightEncoder().getRate()) > 4.5) { // low to high
+			driveTrain.shift(true);
+
+		} else if (Math.abs(driveTrain.getLeftEncoder().getRate()) < 4 && Math.abs(driveTrain.getRightEncoder().getRate()) < 4) { // high to low
+			driveTrain.shift(false);
+		}
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    belt.run(0);
   }
 
   // Returns true when the command should end.

@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -17,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SpeedControllerPIDWrapper;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.CounterBase;
+//import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import static frc.robot.util.DavisDealWithThis.*;
@@ -51,7 +50,7 @@ public class DriveTrain extends SubsystemBase {
 		
 		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
 
-		shifterSolenoid = new DoubleSolenoid(SHIFTER_SOLENOID_A,SHIFTER_SOLENOID_B);
+		shifterSolenoid = new DoubleSolenoid(SHIFTER_SOLENOID_HIGH_CHANNEL , SHIFTER_SOLENOID_LOW_CHANNEL);
 	}
 	  
 	public void setDrivePidEnabled(boolean pidEnabled) {
@@ -65,6 +64,7 @@ public class DriveTrain extends SubsystemBase {
 		SmartDashboard.putNumber("Right Encoder Velocity", rightDriveEncoder.getRate());
 		SmartDashboard.putNumber("Left Encoder Distance", leftDriveEncoder.getDistance());
 		SmartDashboard.putNumber("Right Encoder Distance", rightDriveEncoder.getDistance());
+		
 		// This method will be called once per scheduler run
 	}
 
@@ -74,12 +74,26 @@ public class DriveTrain extends SubsystemBase {
 		differentialDrive.arcadeDrive(move, turn);
 
 		//davis said that a similar approach is hypothetically fine
-		shifterSolenoid.set(Math.abs(leftDriveEncoder.getRate()) > 4 || Math.abs(leftDriveEncoder.getRate()) > 4 ? Value.kForward : Value.kReverse);
+		shifterSolenoid.set(Math.abs(leftDriveEncoder.getRate()) > 4 || Math.abs(rightDriveEncoder.getRate()) > 4 ? Value.kForward : Value.kReverse);
+	}
+	public Encoder getLeftEncoder(){
+		return leftDriveEncoder;
 	}
 
+	public Encoder getRightEncoder(){
+		return rightDriveEncoder;
+	}
+	
 	public double getLeftEncoderDistance() {
 		return leftDriveEncoder.getDistance();
 	}
 
- 	
+ 	public void shift(boolean gear){//true is High
+		 if (gear && shifterSolenoid.get() == Value.kReverse){
+			shifterSolenoid.set(Value.kForward);
+		 }
+		 else if (!gear && shifterSolenoid.get() == Value.kForward){
+			shifterSolenoid.set(Value.kReverse);
+		 }
+	 }
 }

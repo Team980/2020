@@ -22,8 +22,7 @@ import frc.robot.subsystems.Belt;
 import frc.robot.subsystems.ColorWheelSpinner;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.PickupRoller;
-import frc.robot.subsystems.RunBelt;
+//import frc.robot.subsystems.RunBelt;
 import frc.robot.subsystems.Shooter;
 
 import static frc.robot.util.DavisDealWithThis.*;
@@ -45,19 +44,18 @@ public class RobotContainer {
     private static final DriveTrain driveTrain = new DriveTrain();
     private static final Intake intake = new Intake();
     private static final Belt belt = new Belt();
-    private static final PickupRoller roller = new PickupRoller();
     private static final ColorWheelSpinner colorWheelSpinner = new ColorWheelSpinner();
     private static final Shooter shooter = new Shooter();
 
 
     private static final Command colorWheelPositionControl = new ColorWheelPositionControl(colorWheelSpinner);
     private static final Command colorWheelRotationControl = new ColorWheelRotationControl(colorWheelSpinner);
-    private static final Command runIntakeSuck = new RunIntake(intake, 0.8);
-    private static final Command runIntakeSpit = new RunIntake(intake, -0.8);
-    private static final Command toggleRollerDeployed = new ToggleDeployRoller(roller);
-    private static final Command beltFeed = new RunBelt(belt, 0.8);
-    private static final Command beltUnfeed = new RunBelt(belt, -0.8);
-    private static final Command shooterCommand = new ConstantRateShooter(shooter, 50);
+    //private static final Command runIntakeSuck = new RunIntake(intake, 0.8);
+    //private static final Command runIntakeSpit = new RunIntake(intake, -0.8);
+    //private static final Command toggleRollerDeployed = new ToggleDeployRoller(intake);
+    //private static final Command beltFeed = new RunBelt(belt, 0.8);
+    //private static final Command beltUnfeed = new RunBelt(belt, -0.8);
+    //private static final Command shooterCommand = new ConstantRateShooter(shooter, 2000);
 
 
 
@@ -66,6 +64,11 @@ public class RobotContainer {
             () -> driveTrain.arcadeDrive(-throttle.getY(), wheel.getX()), 
             driveTrain
         ));
+
+        belt.setDefaultCommand(new RunCommand(
+            () -> belt.run(xBox.getTriggerAxis(Hand.kRight) - xBox.getTriggerAxis(Hand.kLeft)),
+            belt
+        ));//shoulder trigger analog control for belts
  
         configureButtonBindings();
     }
@@ -79,26 +82,26 @@ public class RobotContainer {
             .whenPressed(() -> driveTrain.setDrivePidEnabled(false));
 
         // xbox
-        new JoystickButton(xBox, XboxController.Button.kA.value)
-            .whenPressed(toggleRollerDeployed);
+        new JoystickButton(xBox, XboxController.Button.kX.value)
+            .whenPressed(new ToggleDeployRoller(intake, true));
+
+        new JoystickButton(xBox, XboxController.Button.kY.value)
+            .whenPressed(new ToggleDeployRoller(intake, false));
 
         new JoystickButton(xBox, XboxController.Button.kB.value)
-            .whenPressed(shooterCommand);
+            .whenHeld(new ConstantRateShooter(shooter, 2000));
 
-        new JoystickButton(xBox, XboxController.Button.kX.value)
+        /*new JoystickButton(xBox, XboxController.Button.kX.value)
             .whileHeld(beltFeed);
 
         new JoystickButton(xBox, XboxController.Button.kY.value)
-            .whileHeld(beltUnfeed);
+            .whileHeld(beltUnfeed);*/
 
-        new JoystickButton(xBox, XboxController.Button.kStart.value)
-            .whileHeld(runIntakeSuck);
+        new JoystickButton(xBox, XboxController.Button.kA.value)
+            .whenHeld(new RunIntake(intake, 0.8));
 
         new JoystickButton(xBox, XboxController.Button.kBack.value)
-            .whileHeld(runIntakeSpit);
-
-        new JoystickButton(xBox, XboxController.Button.kY.value)
-            .whileHeld(beltUnfeed);
+            .whenHeld(new RunIntake(intake, -.08));
 
         new JoystickButton(xBox, XboxController.Button.kBumperLeft.value)
             .whenPressed(colorWheelRotationControl);

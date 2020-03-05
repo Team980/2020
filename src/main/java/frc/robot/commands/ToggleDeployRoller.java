@@ -8,21 +8,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.PickupRoller;
+import frc.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class ToggleDeployRoller extends InstantCommand {
-  private PickupRoller roller;
-  public ToggleDeployRoller(PickupRoller roller) {
-    this.roller = roller;
-    addRequirements(roller);
+  private Intake intake;
+  private boolean deploy;
+  
+  public ToggleDeployRoller(Intake intake , boolean deploy) {
+    this.intake = intake;
+    this.deploy = deploy;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    roller.toggleDeployed();
+    intake.collect(deploy);
   }
 }

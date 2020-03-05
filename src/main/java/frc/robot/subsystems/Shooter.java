@@ -7,10 +7,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
@@ -22,10 +22,8 @@ public class Shooter extends PIDSubsystem {
   private SpeedController motor;
   private Encoder shootEncoder;
   private SimpleMotorFeedforward shootFF;
-  private final Solenoid gateKeeperSolenoid = new Solenoid(SHOOTER_GATEKEEPER_SOLENOID_CHANNEL); // prevents balls from enabled
-  /**
-   * Creates a new ShooterPIDSubsystem.
-   */
+  private final DoubleSolenoid gateKeeperSolenoid = new DoubleSolenoid(SHOOTER_GATEKEEPER_SOLENOID_CLOSED_CHANNEL , SHOOTER_GATEKEEPER_SOLENOID_OPENED_CHANNEL); // Forward is closed
+   
   public Shooter() {
     super(new PIDController(SHOOTER_P, SHOOTER_I, SHOOTER_D));
     getController().setTolerance(1);//rotations per second
@@ -39,7 +37,12 @@ public class Shooter extends PIDSubsystem {
   }
 
   public void setGatekeeperOpen(boolean open) {
-    gateKeeperSolenoid.set(open);
+    if (open){
+      gateKeeperSolenoid.set(Value.kReverse);
+    }
+    else{
+      gateKeeperSolenoid.set(Value.kForward);
+    }
   }
 
   public void fire(double targetRPS){
