@@ -8,7 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.util.Constants.*;
+import static frc.robot.util.DavisDealWithThis.*;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 

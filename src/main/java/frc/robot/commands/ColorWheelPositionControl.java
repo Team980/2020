@@ -13,6 +13,7 @@ import frc.robot.subsystems.ColorWheelSpinner;
 public class ColorWheelPositionControl extends CommandBase {
     private ColorWheelSpinner spinner;
 
+    //takes in the color spinner
     public ColorWheelPositionControl(ColorWheelSpinner spinner) {
         this.spinner = spinner;
         addRequirements(spinner);
@@ -22,16 +23,19 @@ public class ColorWheelPositionControl extends CommandBase {
     public void initialize() {
     }
 
+    //move the spinner
     @Override
     public void execute() {
         spinner.runPositionControl();
     }
 
+    //this complex shiz right here stops the motors
     @Override
     public void end(boolean interrupted) {
         spinner.stopMotors();
     }
 
+    //stops if the spinner is at the desired position
     @Override
     public boolean isFinished() {
         return spinner.isAtPositionTarget();

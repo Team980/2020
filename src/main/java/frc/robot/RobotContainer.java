@@ -26,7 +26,7 @@ import frc.robot.subsystems.PickupRoller;
 import frc.robot.subsystems.RunBelt;
 import frc.robot.subsystems.Shooter;
 
-import static frc.robot.util.Constants.*;
+import static frc.robot.util.DavisDealWithThis.*;
 import static frc.robot.util.Util.*;
 
 /**
@@ -37,6 +37,10 @@ import static frc.robot.util.Util.*;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
+	private static final Joystick throttle = new Joystick(0);
+    private static final Joystick wheel = new Joystick(1);
+    private static final XboxController xBox = new XboxController(2);
+    private static final Joystick prajBox = new Joystick(3);
 
     private static final DriveTrain driveTrain = new DriveTrain();
     private static final Intake intake = new Intake();
@@ -45,13 +49,11 @@ public class RobotContainer {
     private static final ColorWheelSpinner colorWheelSpinner = new ColorWheelSpinner();
     private static final Shooter shooter = new Shooter();
 
-	private static final Joystick throttle = new Joystick(0);
-    private static final Joystick wheel = new Joystick(1);
-    private static final XboxController xBox = new XboxController(2);
 
     private static final Command colorWheelPositionControl = new ColorWheelPositionControl(colorWheelSpinner);
     private static final Command colorWheelRotationControl = new ColorWheelRotationControl(colorWheelSpinner);
-    private static final Command runIntake = new RunIntake(intake);
+    private static final Command runIntakeSuck = new RunIntake(intake, 0.8);
+    private static final Command runIntakeSpit = new RunIntake(intake, -0.8);
     private static final Command toggleRollerDeployed = new ToggleDeployRoller(roller);
     private static final Command beltFeed = new RunBelt(belt, 0.8);
     private static final Command beltUnfeed = new RunBelt(belt, -0.8);
@@ -59,19 +61,15 @@ public class RobotContainer {
 
 
 
-    public RobotContainer() {
-        // Configure the button bindings
-        
+    public RobotContainer() {        
         driveTrain.setDefaultCommand(new RunCommand(
             () -> driveTrain.arcadeDrive(-throttle.getY(), wheel.getX()), 
             driveTrain
         ));
-
-       
-        
+ 
         configureButtonBindings();
     }
-
+    
     private void configureButtonBindings() {
         // throttle
         new JoystickButton(throttle, 0)
@@ -85,10 +83,19 @@ public class RobotContainer {
             .whenPressed(toggleRollerDeployed);
 
         new JoystickButton(xBox, XboxController.Button.kB.value)
-            .whileHeld(shooterCommand);
+            .whenPressed(shooterCommand);
 
         new JoystickButton(xBox, XboxController.Button.kX.value)
             .whileHeld(beltFeed);
+
+        new JoystickButton(xBox, XboxController.Button.kY.value)
+            .whileHeld(beltUnfeed);
+
+        new JoystickButton(xBox, XboxController.Button.kStart.value)
+            .whileHeld(runIntakeSuck);
+
+        new JoystickButton(xBox, XboxController.Button.kBack.value)
+            .whileHeld(runIntakeSpit);
 
         new JoystickButton(xBox, XboxController.Button.kY.value)
             .whileHeld(beltUnfeed);

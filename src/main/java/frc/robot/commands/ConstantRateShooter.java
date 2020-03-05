@@ -17,7 +17,7 @@ public class ConstantRateShooter extends CommandBase {
   private Shooter shooter;
   private double power;
   public ConstantRateShooter(Shooter shooter, double power) {
-    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(shooter);
     this.shooter = shooter;
     this.power = power;
   }

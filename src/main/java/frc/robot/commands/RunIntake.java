@@ -9,16 +9,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
-import static frc.robot.util.Constants.*;
+import static frc.robot.util.DavisDealWithThis.*;
 
 public class RunIntake extends CommandBase {
   /**
    * Creates a new RunIntake.
    */ 
     private Intake intake;
-    public RunIntake(Intake givenIntake) {
+    private double power;
+    public RunIntake(Intake givenIntake, double power) {
         // Use addRequirements() here to declare subsystem dependencies.
         intake = givenIntake;
+        this.power = power;
         addRequirements(intake);
     }
 
@@ -30,12 +32,13 @@ public class RunIntake extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      intake.run(INTAKE_SPEED);
+      intake.run(power);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+      intake.run(0);
     }
 
     // Returns true when the command should end.

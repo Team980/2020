@@ -10,12 +10,12 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.Constants;
+import frc.robot.util.DavisDealWithThis;
 
 public class PickupRoller extends SubsystemBase {
   private Solenoid solenoid;
   public PickupRoller() {
-    solenoid = new Solenoid(Constants.PICKUP_ROLLER__SOLENOID_CHANNEL);
+    solenoid = new Solenoid(DavisDealWithThis.PICKUP_ROLLER__SOLENOID_CHANNEL);
   }
 
   public void toggleDeployed() {
@@ -23,7 +23,7 @@ public class PickupRoller extends SubsystemBase {
   }
 
   public void setDeployed(boolean isDeployed) {
-    solenoid.set(isDeployed == Constants.PICKUP_ROLLER_DEPLOY_SOLENOID_SET_DEPLOYED);
+    solenoid.set(isDeployed == DavisDealWithThis.PICKUP_ROLLER_DEPLOY_SOLENOID_SET_DEPLOYED);
   }
 
   @Override

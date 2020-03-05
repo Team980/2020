@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,8 +18,9 @@ import frc.robot.util.SpeedControllerPIDWrapper;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-import static frc.robot.util.Constants.*;
+import static frc.robot.util.DavisDealWithThis.*;
 
 public class DriveTrain extends SubsystemBase {
 	private DifferentialDrive differentialDrive;
@@ -27,6 +29,8 @@ public class DriveTrain extends SubsystemBase {
 
 	private Encoder leftDriveEncoder;
 	private Encoder rightDriveEncoder;
+
+	private DoubleSolenoid shifterSolenoid;
 	
   	public DriveTrain() {
 		var leftFront = new WPI_TalonSRX(LEFT_FRONT_CAN_ID);
@@ -46,6 +50,8 @@ public class DriveTrain extends SubsystemBase {
 		rightDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(rightFront, rightBack, rightTop), rightDriveEncoder);
 		
 		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
+
+		shifterSolenoid = new DoubleSolenoid(SHIFTER_SOLENOID_A,SHIFTER_SOLENOID_B);
 	}
 	  
 	public void setDrivePidEnabled(boolean pidEnabled) {
@@ -66,5 +72,14 @@ public class DriveTrain extends SubsystemBase {
 		SmartDashboard.putNumber("Throttle", move);//to help with finding the feed forward Ks coefficient
 		SmartDashboard.putNumber("Steering", turn);
 		differentialDrive.arcadeDrive(move, turn);
+
+		//davis said that a similar approach is hypothetically fine
+		shifterSolenoid.set(Math.abs(leftDriveEncoder.getRate()) > 4 || Math.abs(leftDriveEncoder.getRate()) > 4 ? Value.kForward : Value.kReverse);
 	}
+
+	public double getLeftEncoderDistance() {
+		return leftDriveEncoder.getDistance();
+	}
+
+ 	
 }

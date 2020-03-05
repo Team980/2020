@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.util.Constants.*;
-import frc.robot.util.Constants;
+import static frc.robot.util.DavisDealWithThis.*;
+import frc.robot.util.DavisDealWithThis;
 
 public class ColorWheelSpinner extends SubsystemBase {    
     private WheelColor lookingAt = WheelColor.UNKNOWN;
@@ -39,13 +39,11 @@ public class ColorWheelSpinner extends SubsystemBase {
 
     }
 
-    
-
 
     public void runPositionControl() {
         double output = 0;
 
-        if (!lookingAt.equals(WheelColor.UNKNOWN) && !targetColor.equals(WheelColor.UNKNOWN)) {
+        if (lookingAt != WheelColor.UNKNOWN && targetColor != WheelColor.UNKNOWN) {
             output = getTargetDirection(lookingAt, targetColor);
         } 
 
@@ -53,7 +51,7 @@ public class ColorWheelSpinner extends SubsystemBase {
     }
 
     public boolean rotationControlColorTransition() {
-        boolean result = !lastSeen.equals(lookingAt);
+        boolean result = lastSeen != lookingAt;
         lastSeen = lookingAt;
 
         return result;
@@ -75,8 +73,7 @@ public class ColorWheelSpinner extends SubsystemBase {
 
     
     public boolean isAtPositionTarget() {
-        return  lookingAt.equals(targetColor)
-            && !lookingAt.equals(WheelColor.UNKNOWN); 
+        return lookingAt == targetColor && targetColor != WheelColor.UNKNOWN;
     }
 
 
@@ -89,7 +86,6 @@ public class ColorWheelSpinner extends SubsystemBase {
     public void periodic() {
         // report info and stuff
         tryUpdate();
-
 
         SmartDashboard.putString("spinner target color", targetColor.toString());
         SmartDashboard.putString("looking at color", lookingAt.toString());
@@ -112,17 +108,16 @@ public class ColorWheelSpinner extends SubsystemBase {
     enum WheelColor {
         RED, GREEN, BLUE, YELLOW, UNKNOWN;
 
-        WheelColor() {
-        }
+        WheelColor() {}
 
         public static WheelColor fromColor(Color color) {
-            if (color.equals(Constants.RED)) {
+            if (color.equals(DavisDealWithThis.RED)) {
                 return WheelColor.RED;
-            } else if (color.equals(Constants.GREEN)) {
+            } else if (color.equals(DavisDealWithThis.GREEN)) {
                 return WheelColor.GREEN;
-            } else if (color.equals(Constants.BLUE)) {
+            } else if (color.equals(DavisDealWithThis.BLUE)) {
                 return WheelColor.BLUE;
-            } else if (color.equals(Constants.YELLOW)) {
+            } else if (color.equals(DavisDealWithThis.YELLOW)) {
                 return WheelColor.YELLOW;
             } else {
                 return WheelColor.UNKNOWN;

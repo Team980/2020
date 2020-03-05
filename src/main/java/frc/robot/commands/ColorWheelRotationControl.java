@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ColorWheelSpinner;
+import static frc.robot.util.DavisDealWithThis.*;
 
 public class ColorWheelRotationControl extends CommandBase {
     private ColorWheelSpinner spinner;
@@ -39,6 +40,6 @@ public class ColorWheelRotationControl extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return transitionsSeen > 24;
+        return transitionsSeen > WHEEL_ROTATIONS * COLORS_PER_ROTATION;
     }
 }

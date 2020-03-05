@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.util.Color;
  * It is advised to statically import this class (or one of its inner classes)
  * wherever the constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class DavisDealWithThis {
     //low gear PID constants
     public static final double LOW_PID_DRIVE_P = 1.0;//TODO: tune constants for low gear
 	public static final double LOW_PID_DRIVE_I = 0.0;
@@ -40,6 +40,8 @@ public final class Constants {
     public static final double MAX_DRIVE_SPEED_FPS_HIGH = 16.0;// TODO: find max high gear speed
     public static final double MAX_DRIVE_SPEED_FPS_LOW = 4.0;// TODO: find max low gear speed
     public static final double WHEEL_RADIUS_FEET = 2.0 / 12.0; // 2 inches
+
+    public static final Boolean HIGH_GEAR = true;
 
     public static final double TURN_DEADBAND = 0.1;
     public static final double MOVE_DEADBAND = 0.1;
@@ -61,6 +63,12 @@ public final class Constants {
 
     public static final boolean DRIVE_PID_ENABLED_DEFAULT = false;
 
+    public static final int SHIFTER_SOLENOID_A = 0;//todo: let davis deal with this
+    public static final int SHIFTER_SOLENOID_B = 0;
+
+    public static final int WHEEL_ROTATIONS = 3;
+    public static final int COLORS_PER_ROTATION = 8;
+    public static final int INITIAL_TRANSITION_COUNT = 0;
 
     public static final double POWER_PORT_TARGET_LOWEST_POINT_FEET = 6.8125;
     public static final double LIMELIGHT_MOUNTING_HEIGHT_FEET = 3.7;
@@ -100,5 +108,10 @@ public final class Constants {
     public static final Color GREEN = ColorMatch.makeColor(0.19, 0.55, 0.25);
     public static final Color BLUE = ColorMatch.makeColor(0.15, 0.44, 0.40);
     public static final Color YELLOW = ColorMatch.makeColor(0.31, 0.55, 0.13);
+
+
+    // commands
+    public static final double DRIVE_BACK_AUTO_FEET = 2;
+    public static final double DRIVE_BACK_POWER = -0.8;
 
 }
