@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
 
+  private Command autoCommand = null;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -63,7 +64,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
+    autoCommand = robotContainer.getAutoCommand();
+    autoCommand.schedule();
   }
 
   /**
@@ -75,6 +77,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    if (autoCommand != null) autoCommand.cancel();
   }
 
   /**

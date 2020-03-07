@@ -29,7 +29,8 @@ public class Limelight extends SubsystemBase {
   }
 
   public double[] getCornerYs() {
-    return table.getEntry("tcorny").getDoubleArray(new double[0]); 
+    return table.getEntry
+    ("tcorny").getDoubleArray(new double[0]); 
   }
 
   @Override

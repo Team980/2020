@@ -65,6 +65,8 @@ public final class DavisDealWithThis {
 
     public static final int SHIFTER_SOLENOID_HIGH_CHANNEL = 0;//todo: let davis deal with this
     public static final int SHIFTER_SOLENOID_LOW_CHANNEL = 1;
+    public static final double SHIFT_POINT = 4; // feet per second
+    public static final double SHIFTER_RADIUS_OF_CONVERGENCE = 0.5;
 
     public static final int WHEEL_ROTATIONS = 3;
     public static final int COLORS_PER_ROTATION = 8;
@@ -110,9 +112,11 @@ public final class DavisDealWithThis {
     public static final Color BLUE = ColorMatch.makeColor(0.15, 0.44, 0.40);
     public static final Color YELLOW = ColorMatch.makeColor(0.31, 0.55, 0.13);
 
+    public static final int SHOOTER_RATE = 5;//Rotations per second
+
 
     // commands
-    public static final double DRIVE_BACK_AUTO_FEET = 2;
+    public static final double DRIVE_BACK_AUTO_FEET = 1;
     public static final double DRIVE_BACK_POWER = -0.8;
 
 }

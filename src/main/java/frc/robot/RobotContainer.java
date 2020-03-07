@@ -11,17 +11,22 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ColorWheelPositionControl;
 import frc.robot.commands.ColorWheelRotationControl;
 import frc.robot.commands.ConstantRateShooter;
+import frc.robot.commands.DriveBackAuto;
+import frc.robot.commands.RunBelt;
 import frc.robot.commands.RunIntake;
+import frc.robot.commands.SetGear;
 import frc.robot.commands.ToggleDeployRoller;
 import frc.robot.subsystems.Belt;
 import frc.robot.subsystems.ColorWheelSpinner;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ShifterSubsystem;
 //import frc.robot.subsystems.RunBelt;
 import frc.robot.subsystems.Shooter;
 
@@ -46,23 +51,34 @@ public class RobotContainer {
     private static final Belt belt = new Belt();
     private static final ColorWheelSpinner colorWheelSpinner = new ColorWheelSpinner();
     private static final Shooter shooter = new Shooter();
+    private static final ShifterSubsystem shifter = new ShifterSubsystem();
 
 
-    private static final Command colorWheelPositionControl = new ColorWheelPositionControl(colorWheelSpinner);
-    private static final Command colorWheelRotationControl = new ColorWheelRotationControl(colorWheelSpinner);
-    //private static final Command runIntakeSuck = new RunIntake(intake, 0.8);
-    //private static final Command runIntakeSpit = new RunIntake(intake, -0.8);
+    // private static final Command colorWheelPositionControl = new ColorWheelPositionControl(colorWheelSpinner);
+    // private static final Command colorWheelRotationControl = new ColorWheelRotationControl(colorWheelSpinner);
+    private static final Command runIntakeSuck = new RunIntake(intake, 1);
+    private static final Command runIntakeSpit = new RunIntake(intake, -1);
     //private static final Command toggleRollerDeployed = new ToggleDeployRoller(intake);
-    //private static final Command beltFeed = new RunBelt(belt, 0.8);
-    //private static final Command beltUnfeed = new RunBelt(belt, -0.8);
+    private static final Command beltFeed = new RunBelt(belt, 0.8);
+    private static final Command beltUnfeed = new RunBelt(belt, -0.8);
     //private static final Command shooterCommand = new ConstantRateShooter(shooter, 2000);
 
-
-
+    private static final Command setGearHigh = new SetGear(shifter, true);
+    private static final Command setGearLow = new SetGear(shifter, false);
+    private static final Command driveBackAuto = new DriveBackAuto(driveTrain, DRIVE_BACK_AUTO_FEET);
+    
     public RobotContainer() {        
         driveTrain.setDefaultCommand(new RunCommand(
             () -> driveTrain.arcadeDrive(-throttle.getY(), wheel.getX()), 
             driveTrain
+        ));
+
+        shifter.setDefaultCommand(new RunCommand(
+            () -> {
+                if(driveTrain.isOutsideThresholdRate())
+                    shifter.set(driveTrain.shouldShiftUp()); //returns true if rate is above shift point
+             },
+            shifter
         ));
 
         belt.setDefaultCommand(new RunCommand(
@@ -75,41 +91,48 @@ public class RobotContainer {
     
     private void configureButtonBindings() {
         // throttle
-        new JoystickButton(throttle, 0)
+        new JoystickButton(throttle, 1)
             .whenPressed(() -> driveTrain.setDrivePidEnabled(true));
 
-        new JoystickButton(throttle, 1)
+        new JoystickButton(throttle, 2)
             .whenPressed(() -> driveTrain.setDrivePidEnabled(false));
 
         // xbox
-        new JoystickButton(xBox, XboxController.Button.kX.value)
-            .whenPressed(new ToggleDeployRoller(intake, true));
+        // new JoystickButton(xBox, XboxController.Button.kX.value)
+        //     .whenPressed(new ToggleDeployRoller(intake, true));
 
-        new JoystickButton(xBox, XboxController.Button.kY.value)
-            .whenPressed(new ToggleDeployRoller(intake, false));
+        // new JoystickButton(xBox, XboxController.Button.kY.value)
+        //     .whenPressed(new ToggleDeployRoller(intake, false));
 
         new JoystickButton(xBox, XboxController.Button.kB.value)
-            .whenHeld(new ConstantRateShooter(shooter, 2000));
+            .whenHeld(new ConstantRateShooter(shooter, SHOOTER_RATE));
 
-        /*new JoystickButton(xBox, XboxController.Button.kX.value)
-            .whileHeld(beltFeed);
+        new JoystickButton(prajBox, 1) //the one will change to the port on the praj box
+            .whenHeld(setGearHigh); //set to high gear
 
-        new JoystickButton(xBox, XboxController.Button.kY.value)
-            .whileHeld(beltUnfeed);*/
+        new JoystickButton(prajBox, 2)
+            .whenHeld(setGearLow); //set to low gear
+        
+        //  new JoystickButton(xBox, XboxController.Button.kX.value)
+        //      .whenHeld(beltFeed);
 
-        new JoystickButton(xBox, XboxController.Button.kA.value)
-            .whenHeld(new RunIntake(intake, 0.8));
+        //  new JoystickButton(xBox, XboxController.Button.kY.value)
+        //      .whenHeld(beltUnfeed);
+
+        new JoystickButton(xBox, XboxController.Button.kStart.value)
+            .whenHeld(runIntakeSuck);
 
         new JoystickButton(xBox, XboxController.Button.kBack.value)
-            .whenHeld(new RunIntake(intake, -.08));
+            .whenHeld(runIntakeSpit);
 
-        new JoystickButton(xBox, XboxController.Button.kBumperLeft.value)
-            .whenPressed(colorWheelRotationControl);
+        // new JoystickButton(xBox, XboxController.Button.kBumperLeft.value)
+        //     .whenPressed(colorWheelRotationControl);
 
-        new JoystickButton(xBox, XboxController.Button.kBumperRight.value)
-            .whenPressed(colorWheelPositionControl);
+        // new JoystickButton(xBox, XboxController.Button.kBumperRight.value)
+        //     .whenPressed(colorWheelPositionControl);
+    }
 
-
-
+    public Command getAutoCommand() {
+        return driveBackAuto;
     }
 }

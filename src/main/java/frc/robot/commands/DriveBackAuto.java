@@ -16,7 +16,6 @@ public class DriveBackAuto extends CommandBase {
   private DriveTrain driveTrain;
 
   private double initialLeftDistance;
-  private double initialRightDistance;
 
   private double desiredDistance;
   // why should we care about both sides? A: because i like symmetry
@@ -30,7 +29,6 @@ public class DriveBackAuto extends CommandBase {
   @Override
   public void initialize() {
     initialLeftDistance = driveTrain.getLeftEncoderDistance();
-    initialRightDistance = driveTRain.getRightEncoderDistance();
   }
 
   @Override
@@ -44,6 +42,6 @@ public class DriveBackAuto extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(driveTrain.getLeftEncoderDistance()+driveTrain.getRightEncoderDistance()-initialLeftDistance-initialRightDistance) > DRIVE_BACK_AUTO_FEET;
+    return Math.abs(driveTrain.getLeftEncoderDistance()-initialLeftDistance) > desiredDistance;
   }
 }

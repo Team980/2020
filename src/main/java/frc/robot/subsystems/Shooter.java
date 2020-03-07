@@ -10,9 +10,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import static frc.robot.util.DavisDealWithThis.*;
 
@@ -30,8 +32,8 @@ public class Shooter extends PIDSubsystem {
 
     motor = new WPI_TalonSRX(SHOOTER_TALON_CHANNEL);
 
-    shootEncoder = new Encoder(SHOOTER_ENCODER_CHANNEL_A, SHOOTER_ENCODER_CHANNEL_B);
-    shootEncoder.setDistancePerPulse(SHOOTER_ENCODER_DISTANCE_PER_PULSE);
+    shootEncoder = new Encoder(SHOOTER_ENCODER_CHANNEL_A, SHOOTER_ENCODER_CHANNEL_B, false, EncodingType.k4X);
+    //shootEncoder.setDistancePerPulse(SHOOTER_ENCODER_DISTANCE_PER_PULSE);
 
     shootFF = new SimpleMotorFeedforward(SHOOTER_FEEDFORWARD_KS, SHOOTER_FEEDFORWARD_KV);
   }
@@ -45,6 +47,10 @@ public class Shooter extends PIDSubsystem {
     }
   }
 
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("st;lskdfj", shootEncoder.getDistance());
+  }
   public void fire(double targetRPS){
     setSetpoint(targetRPS);
   }

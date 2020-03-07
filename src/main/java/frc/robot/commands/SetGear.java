@@ -8,35 +8,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.ShifterSubsystem;
 
-public class AutoShift extends CommandBase {
-  DriveTrain driveTrain;
-  int gearSelector;//0 auto, 1 low, 2 high
-  /**
-   * Creates a new AutoShift.
-   */
-  public AutoShift(DriveTrain driveTrain , int gearSelector) {
-    this.driveTrain = driveTrain;
-    this.gearSelector = gearSelector;
+public class SetGear extends CommandBase {
+ 
+  private boolean isSet;
+  private ShifterSubsystem shifter;
 
-    // Use addRequirements() here to declare subsystem dependencies.
+  public SetGear(ShifterSubsystem shifter, boolean isSet) {
+    this.shifter = shifter;
+    this.isSet = isSet;
+    addRequirements(shifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shifter.set(isSet);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-		if (Math.abs(driveTrain.getLeftEncoder().getRate()) > 4.5 || Math.abs(driveTrain.getRightEncoder().getRate()) > 4.5) { // low to high
-			driveTrain.shift(true);
-
-		} else if (Math.abs(driveTrain.getLeftEncoder().getRate()) < 4 && Math.abs(driveTrain.getRightEncoder().getRate()) < 4) { // high to low
-			driveTrain.shift(false);
-		}
   }
 
   // Called once the command ends or is interrupted.

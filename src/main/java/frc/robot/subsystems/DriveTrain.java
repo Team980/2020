@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,29 +29,25 @@ public class DriveTrain extends SubsystemBase {
 
 	private Encoder leftDriveEncoder;
 	private Encoder rightDriveEncoder;
-
-	private DoubleSolenoid shifterSolenoid;
 	
   	public DriveTrain() {
 		var leftFront = new WPI_TalonSRX(LEFT_FRONT_CAN_ID);
 		var leftBack = new WPI_TalonSRX(LEFT_BACK_CAN_ID);
 		var leftTop = new WPI_TalonSRX(LEFT_TOP_CAN_ID);
 		leftTop.setInverted(true);
-		leftDriveEncoder = new Encoder(LEFT_DRIVE_ENCODER_CHANNEL_A, LEFT_DRIVE_ENCODER_CHANNEL_B);
-		// leftDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
+		leftDriveEncoder = new Encoder(LEFT_DRIVE_ENCODER_CHANNEL_A, LEFT_DRIVE_ENCODER_CHANNEL_B, false, EncodingType.k4X);
+		leftDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
 		leftDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(leftFront, leftBack, leftTop), leftDriveEncoder);
 
 		var rightFront = new WPI_TalonSRX(RIGHT_FRONT_CAN_ID);
 		var rightBack = new WPI_TalonSRX(RIGHT_BACK_CAN_ID);
 		var rightTop = new WPI_TalonSRX(RIGHT_TOP_CAN_ID);
-		rightTop.setInverted(true);
-		rightDriveEncoder = new Encoder(RIGHT_DRIVE_ENCODER_CHANNEL_A, RIGHT_DRIVE_ENCODER_CHANNEL_B);
-		// rightDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
+		//rightTop.setInverted(true);
+		rightDriveEncoder = new Encoder(RIGHT_DRIVE_ENCODER_CHANNEL_A, RIGHT_DRIVE_ENCODER_CHANNEL_B, false, EncodingType.k4X);
+		rightDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
 		rightDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(rightFront, rightBack, rightTop), rightDriveEncoder);
 		
 		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
-
-		shifterSolenoid = new DoubleSolenoid(SHIFTER_SOLENOID_HIGH_CHANNEL , SHIFTER_SOLENOID_LOW_CHANNEL);
 	}
 	  
 	public void setDrivePidEnabled(boolean pidEnabled) {
@@ -72,28 +69,29 @@ public class DriveTrain extends SubsystemBase {
 		SmartDashboard.putNumber("Throttle", move);//to help with finding the feed forward Ks coefficient
 		SmartDashboard.putNumber("Steering", turn);
 		differentialDrive.arcadeDrive(move, turn);
-
-		//davis said that a similar approach is hypothetically fine
-		shifterSolenoid.set(Math.abs(leftDriveEncoder.getRate()) > 4 || Math.abs(rightDriveEncoder.getRate()) > 4 ? Value.kForward : Value.kReverse);
-	}
-	public Encoder getLeftEncoder(){
-		return leftDriveEncoder;
 	}
 
-	public Encoder getRightEncoder(){
-		return rightDriveEncoder;
-	}
-	
 	public double getLeftEncoderDistance() {
 		return leftDriveEncoder.getDistance();
 	}
 
- 	public void shift(boolean gear){//true is High
-		 if (gear && shifterSolenoid.get() == Value.kReverse){
-			shifterSolenoid.set(Value.kForward);
-		 }
-		 else if (!gear && shifterSolenoid.get() == Value.kForward){
-			shifterSolenoid.set(Value.kReverse);
-		 }
-	 }
+	public double getLeftRate(){
+		return leftDriveEncoder.getRate();
+	}
+
+	public double getRightRate(){
+		return rightDriveEncoder.getRate();
+	}
+	public double getAverageRate()
+	{
+		return 0.5*(Math.abs(getRightRate()) + Math.abs(getLeftRate()));
+	}
+	public boolean isOutsideThresholdRate()
+	{
+		return Math.abs(getAverageRate() - SHIFT_POINT) > SHIFTER_RADIUS_OF_CONVERGENCE;
+	}
+	public boolean shouldShiftUp()
+	{
+		return getAverageRate()>SHIFT_POINT;
+	}
 }

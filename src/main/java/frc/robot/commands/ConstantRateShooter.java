@@ -18,24 +18,24 @@ public class ConstantRateShooter extends CommandBase {
   private double targetRate;
   public ConstantRateShooter(Shooter shooter, double targetRate) {
     this.shooter = shooter;
-    this.targetRate = targetRate;//rate should be in RPM
+    this.targetRate = targetRate;//rate should be in RPS
     addRequirements(shooter);
   }
 
-  // Called when the command is initially scheduled.
+  
   @Override
   public void initialize() {
     shooter.enable();
     shooter.setGatekeeperOpen(true);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  
   @Override
   public void execute() {
-    shooter.fire(targetRate / 60.0);//convert to RPS
+    shooter.fire(targetRate);//convert to RPS
   }
 
-  // Called once the command ends or is interrupted.
+  
   @Override
   public void end(boolean interrupted) {
     shooter.fire(0);
