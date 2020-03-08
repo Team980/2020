@@ -15,21 +15,46 @@ import static frc.robot.util.DavisDealWithThis.*;
 
 public class ShifterSubsystem extends SubsystemBase {
     private DoubleSolenoid shifter;
+    private DriveTrain driveTrain;
 
-    public ShifterSubsystem() {
+    public ShifterSubsystem(DriveTrain driveTrain) {
         shifter = new DoubleSolenoid(SHIFTER_SOLENOID_HIGH_CHANNEL, SHIFTER_SOLENOID_LOW_CHANNEL);
+        this.driveTrain = driveTrain;
     }
 
-    public void set(boolean isSet) {
-        if (isSet) {
+    public boolean isHighGear() {
+        return shifter.get() == Value.kForward; 
+    }
+
+    public void setGear(boolean isHigh) {
+        if (isHigh) {
             shifter.set(Value.kForward);
         } else {
             shifter.set(Value.kReverse);
         }
     } 
 
+    public void autoShift(){
+        if (!isHighGear() && shouldShiftUp()){
+            setGear(true);
+        } else if (isHighGear() && shouldShiftDown()) {
+            setGear(false);
+        }
+    }
+    
+	public boolean shouldShiftUp()  {
+		return Math.abs(driveTrain.getLeftRate()) > SHIFT_POINT_HIGH
+			|| Math.abs(driveTrain.getRightRate()) > SHIFT_POINT_HIGH;
+    }
+
+    public boolean shouldShiftDown() {
+		return Math.abs(driveTrain.getLeftRate()) < SHIFT_POINT_LOW
+			&& Math.abs(driveTrain.getRightRate()) < SHIFT_POINT_LOW;
+    }
+    
     @Override
     public void periodic() {
-        SmartDashboard.putString("gear state", shifter.get().toString());
+        SmartDashboard.putBoolean("IS HIGH GEAR", isHighGear());
+
     }
 }

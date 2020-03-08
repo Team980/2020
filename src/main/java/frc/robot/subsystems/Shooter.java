@@ -38,6 +38,7 @@ public class Shooter extends PIDSubsystem {
     shootFF = new SimpleMotorFeedforward(SHOOTER_FEEDFORWARD_KS, SHOOTER_FEEDFORWARD_KV);
   }
 
+
   public void setGatekeeperOpen(boolean open) {
     if (open){
       gateKeeperSolenoid.set(Value.kReverse);
@@ -52,7 +53,8 @@ public class Shooter extends PIDSubsystem {
     SmartDashboard.putNumber("st;lskdfj", shootEncoder.getDistance());
   }
   public void fire(double targetRPS){
-    setSetpoint(targetRPS);
+    motor.set(targetRPS);
+        //setSetpoint(targetRPS);
   }
 
   @Override

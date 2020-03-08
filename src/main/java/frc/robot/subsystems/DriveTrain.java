@@ -82,16 +82,4 @@ public class DriveTrain extends SubsystemBase {
 	public double getRightRate(){
 		return rightDriveEncoder.getRate();
 	}
-	public double getAverageRate()
-	{
-		return 0.5*(Math.abs(getRightRate()) + Math.abs(getLeftRate()));
-	}
-	public boolean isOutsideThresholdRate()
-	{
-		return Math.abs(getAverageRate() - SHIFT_POINT) > SHIFTER_RADIUS_OF_CONVERGENCE;
-	}
-	public boolean shouldShiftUp()
-	{
-		return getAverageRate()>SHIFT_POINT;
-	}
 }

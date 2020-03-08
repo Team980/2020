@@ -65,7 +65,8 @@ public final class DavisDealWithThis {
 
     public static final int SHIFTER_SOLENOID_HIGH_CHANNEL = 0;//todo: let davis deal with this
     public static final int SHIFTER_SOLENOID_LOW_CHANNEL = 1;
-    public static final double SHIFT_POINT = 4; // feet per second
+    public static final double SHIFT_POINT_HIGH = 4.5; // feet per second
+    public static final double SHIFT_POINT_LOW = 4;
     public static final double SHIFTER_RADIUS_OF_CONVERGENCE = 0.5;
 
     public static final int WHEEL_ROTATIONS = 3;
@@ -117,6 +118,6 @@ public final class DavisDealWithThis {
 
     // commands
     public static final double DRIVE_BACK_AUTO_FEET = 1;
-    public static final double DRIVE_BACK_POWER = -0.8;
+    public static final double DRIVE_BACK_POWER = 0.8;
 
 }

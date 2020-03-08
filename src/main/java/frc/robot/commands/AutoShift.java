@@ -7,31 +7,27 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShifterSubsystem;
 
-public class SetGear extends CommandBase {
- 
-  private boolean isSet;
+public class AutoShift extends CommandBase {
   private ShifterSubsystem shifter;
-
-  public SetGear(ShifterSubsystem shifter, boolean isSet) {
+  
+  public AutoShift(ShifterSubsystem shifter) {
+    // Use addRequirements() here to declare subsystem dependencies.
     this.shifter = shifter;
-    this.isSet = isSet;
     addRequirements(shifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("tried to shift "+ isSet);
-    shifter.setGear(isSet);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shifter.autoShift();
   }
 
   // Called once the command ends or is interrupted.
