@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import static frc.robot.util.DavisDealWithThis.*;
@@ -42,6 +41,6 @@ public class DriveBackAuto extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(driveTrain.getLeftEncoderDistance()-initialLeftDistance) > desiredDistance;
+    return Math.abs(driveTrain.getLeftEncoderDistance()-initialLeftDistance) > desiredDistance || Math.abs(driveTrain.getRightEncoderDistance() - initialLeftDistance) > desiredDistance;
   }
 }

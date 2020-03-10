@@ -23,6 +23,23 @@ import edu.wpi.first.wpilibj.util.Color;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class DavisDealWithThis {
+    //Drivetrain
+    public static final int LEFT_FRONT_CAN_ID = 1;
+    public static final int LEFT_BACK_CAN_ID = 2;
+    public static final int LEFT_TOP_CAN_ID = 3;
+
+    public static final int RIGHT_FRONT_CAN_ID = 4;
+    public static final int RIGHT_BACK_CAN_ID = 5;
+    public static final int RIGHT_TOP_CAN_ID = 6;
+
+    public static final int LEFT_DRIVE_ENCODER_CHANNEL_A = 0;
+    public static final int LEFT_DRIVE_ENCODER_CHANNEL_B = 1;
+
+    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_A = 2;
+    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_B = 3;
+
+    public static final double WHEEL_RADIUS_FEET = 2.0 / 12.0; // 2 inches
+
     //low gear PID constants
     public static final double LOW_PID_DRIVE_P = 1.0;//TODO: tune constants for low gear
 	public static final double LOW_PID_DRIVE_I = 0.0;
@@ -39,35 +56,35 @@ public final class DavisDealWithThis {
 
     public static final double MAX_DRIVE_SPEED_FPS_HIGH = 16.0;// TODO: find max high gear speed
     public static final double MAX_DRIVE_SPEED_FPS_LOW = 4.0;// TODO: find max low gear speed
-    public static final double WHEEL_RADIUS_FEET = 2.0 / 12.0; // 2 inches
 
     public static final Boolean HIGH_GEAR = true;
 
     public static final double TURN_DEADBAND = 0.1;
     public static final double MOVE_DEADBAND = 0.1;
 
-    public static final int LEFT_FRONT_CAN_ID = 1;
-    public static final int LEFT_BACK_CAN_ID = 2;
-    public static final int LEFT_TOP_CAN_ID = 3;
-
-    public static final int RIGHT_FRONT_CAN_ID = 4;
-    public static final int RIGHT_BACK_CAN_ID = 5;
-    public static final int RIGHT_TOP_CAN_ID = 6;
-
-
-    public static final int LEFT_DRIVE_ENCODER_CHANNEL_A = 0;
-    public static final int LEFT_DRIVE_ENCODER_CHANNEL_B = 1;
-
-    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_A = 2;
-    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_B = 3;
-
     public static final boolean DRIVE_PID_ENABLED_DEFAULT = false;
 
+    
+    //shifter
     public static final int SHIFTER_SOLENOID_HIGH_CHANNEL = 0;//todo: let davis deal with this
     public static final int SHIFTER_SOLENOID_LOW_CHANNEL = 1;
     public static final double SHIFT_POINT_HIGH = 4.5; // feet per second
     public static final double SHIFT_POINT_LOW = 4;
     public static final double SHIFTER_RADIUS_OF_CONVERGENCE = 0.5;
+
+    public static final int SHOOTER_GATEKEEPER_SOLENOID_CLOSED_CHANNEL = 4;
+    public static final int SHOOTER_GATEKEEPER_SOLENOID_OPENED_CHANNEL = 5;
+    public static final int SHOOTER_TALON_CHANNEL = 10;
+    public static final int SHOOTER_ENCODER_CHANNEL_A = 4; 
+    public static final int SHOOTER_ENCODER_CHANNEL_B = 5;
+
+    public static final double SHOOTER_RPS_MAX = 3100.0 / 60.0;//TODO: find real max
+    public static final double SHOOTER_P = .1;
+    public static final double SHOOTER_I = 0;
+    public static final double SHOOTER_D = .0005;
+    public static final double SHOOTER_FEEDFORWARD_KS = .05;//volts necessary to barely start the wheel rotating
+    public static final double SHOOTER_FEEDFORWARD_KV = 12.0 / SHOOTER_RPS_MAX; //volts to maintain a speed, calc based on 12V to maintain max speed
+
 
     public static final int WHEEL_ROTATIONS = 3;
     public static final int COLORS_PER_ROTATION = 8;
@@ -81,19 +98,6 @@ public final class DavisDealWithThis {
     public static final double LIMELIGHT_VERTICAL_FOV_RADIANS = Util.degreesToRadians(41);
     public static final double LIMELIGHT_HORIZONTAL_FOV_RADIANS = Util.degreesToRadians(54);
 
-    public static final int SHOOTER_GATEKEEPER_SOLENOID_CLOSED_CHANNEL = 4; // TODO: elec match
-    public static final int SHOOTER_GATEKEEPER_SOLENOID_OPENED_CHANNEL = 5; // TODO: elec match
-    public static final int SHOOTER_TALON_CHANNEL = 10;//TODO: elec match
-    public static final int SHOOTER_ENCODER_CHANNEL_A = 4; // TODO: elec match
-    public static final int SHOOTER_ENCODER_CHANNEL_B = 5;
-    public static final double SHOOTER_ENCODER_DISTANCE_PER_PULSE = 1.0 / 360.0;
-    public static final double SHOOTER_RPS_MAX = 4000.0 / 60.0;//TODO: find real max
-    public static final double SHOOTER_P = .1;
-    public static final double SHOOTER_I = 0;
-    public static final double SHOOTER_D = .0005;
-    public static final double SHOOTER_FEEDFORWARD_KS = .05;//volts necessary to barely start the wheel rotating
-    public static final double SHOOTER_FEEDFORWARD_KV = 12.0 / SHOOTER_RPS_MAX; //volts to maintain a speed, calc based on 12V to maintain max speed
-      
     public static final int PICKUP_ROLLER_DEPLOYED_SOLENOID_CHANNEL = 2; // todo: find
     public static final int PICKUP_ROLLER_RETRACT_SOLENOID_CHANNEL = 3; // todo: find
 

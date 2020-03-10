@@ -10,15 +10,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SpeedControllerPIDWrapper;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-//import edu.wpi.first.wpilibj.CounterBase;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import static frc.robot.util.DavisDealWithThis.*;
 
@@ -35,6 +31,7 @@ public class DriveTrain extends SubsystemBase {
 		var leftBack = new WPI_TalonSRX(LEFT_BACK_CAN_ID);
 		var leftTop = new WPI_TalonSRX(LEFT_TOP_CAN_ID);
 		leftTop.setInverted(true);
+
 		leftDriveEncoder = new Encoder(LEFT_DRIVE_ENCODER_CHANNEL_A, LEFT_DRIVE_ENCODER_CHANNEL_B, false, EncodingType.k4X);
 		leftDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
 		leftDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(leftFront, leftBack, leftTop), leftDriveEncoder);
@@ -42,7 +39,8 @@ public class DriveTrain extends SubsystemBase {
 		var rightFront = new WPI_TalonSRX(RIGHT_FRONT_CAN_ID);
 		var rightBack = new WPI_TalonSRX(RIGHT_BACK_CAN_ID);
 		var rightTop = new WPI_TalonSRX(RIGHT_TOP_CAN_ID);
-		//rightTop.setInverted(true);
+		//rightTop.setInverted(true); //TODO: fix electrical reversing of this motor
+
 		rightDriveEncoder = new Encoder(RIGHT_DRIVE_ENCODER_CHANNEL_A, RIGHT_DRIVE_ENCODER_CHANNEL_B, false, EncodingType.k4X);
 		rightDriveEncoder.setDistancePerPulse(Math.PI * 2 * WHEEL_RADIUS_FEET / 2048.0);
 		rightDrive = new SpeedControllerPIDWrapper(new SpeedControllerGroup(rightFront, rightBack, rightTop), rightDriveEncoder);
@@ -82,4 +80,10 @@ public class DriveTrain extends SubsystemBase {
 	public double getRightRate(){
 		return rightDriveEncoder.getRate();
 	}
+
+	public double getRightEncoderDistance() {
+		return rightDriveEncoder.getDistance();
+	}
+
+
 }

@@ -8,24 +8,24 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.commands.AutoShift;
-import frc.robot.commands.ColorWheelPositionControl;
-import frc.robot.commands.ColorWheelRotationControl;
 import frc.robot.commands.ConstantRateShooter;
 import frc.robot.commands.DriveBackAuto;
 import frc.robot.commands.RunBelt;
-import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetGear;
 import frc.robot.commands.ToggleDeployRoller;
 import frc.robot.subsystems.Belt;
-import frc.robot.subsystems.ColorWheelSpinner;
+//import frc.robot.commands.ColorWheelPositionControl;
+//import frc.robot.commands.ColorWheelRotationControl;
+
+//import frc.robot.subsystems.ColorWheelSpinner;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShifterSubsystem;
@@ -33,7 +33,6 @@ import frc.robot.subsystems.ShifterSubsystem;
 import frc.robot.subsystems.Shooter;
 
 import static frc.robot.util.DavisDealWithThis.*;
-import static frc.robot.util.Util.*;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -51,22 +50,15 @@ public class RobotContainer {
     private static final DriveTrain driveTrain = new DriveTrain();
     private static final Intake intake = new Intake();
     private static final Belt belt = new Belt();
-    private static final ColorWheelSpinner colorWheelSpinner = new ColorWheelSpinner();
     private static final Shooter shooter = new Shooter();
     private static final ShifterSubsystem shifter = new ShifterSubsystem(driveTrain);
+    //private static final ColorWheelSpinner colorWheelSpinner = new ColorWheelSpinner();
 
 
-    // private static final Command colorWheelPositionControl = new ColorWheelPositionControl(colorWheelSpinner);
-    // private static final Command colorWheelRotationControl = new ColorWheelRotationControl(colorWheelSpinner);
-    private static final Command runIntakeSuck = new RunIntake(intake, 1);
-    private static final Command runIntakeSpit = new RunIntake(intake, -1);
+    //private static final Command colorWheelPositionControl = new ColorWheelPositionControl(colorWheelSpinner);
+    //private static final Command colorWheelRotationControl = new ColorWheelRotationControl(colorWheelSpinner);
     //private static final Command toggleRollerDeployed = new ToggleDeployRoller(intake);
-    private static final Command beltFeed = new RunBelt(belt, 0.8);
-    private static final Command beltUnfeed = new RunBelt(belt, -0.8);
     //private static final Command shooterCommand = new ConstantRateShooter;(shooter, 2000);
-    private static final Command autoShift = new AutoShift(shifter);
-    private static final Command setGearHigh = new SetGear(shifter, true);
-    private static final Command setGearLow = new SetGear(shifter, false);
     private static final Command driveBackAuto = new DriveBackAuto(driveTrain, DRIVE_BACK_AUTO_FEET);
     
     public RobotContainer() {        
@@ -75,7 +67,7 @@ public class RobotContainer {
             driveTrain
         ));
 
-        shifter.setDefaultCommand(autoShift);
+        shifter.setDefaultCommand(new AutoShift(shifter));
         // shifter.setDefaultCommand(new RunCommand(
         //         () -> shifter.setGear(true),
         //         shifter
@@ -87,6 +79,11 @@ public class RobotContainer {
             intake
         ));
 
+        shooter.setDefaultCommand(new RunCommand(
+            () -> shooter.manual(xBox.getY(Hand.kRight)),
+            shooter
+        ));
+
         // belt.setDefaultCommand(new RunCommand(
         //     () -> belt.run(xBox.getTriggerAxis(Hand.kRight) - xBox.getTriggerAxis(Hand.kLeft)),
         //     belt
@@ -96,42 +93,27 @@ public class RobotContainer {
     }
     
     private void configureButtonBindings() {
-        // throttle
-        // new JoystickButton(throttle, 1)
-        //     .whenPressed(() -> driveTrain.setDrivePidEnabled(true));
 
-        // new JoystickButton(throttle, 2)
-        //     .whenPressed(() -> driveTrain.setDrivePidEnabled(false));
-
-        // xbox
-        // new JoystickButton(xBox, XboxController.Button.kA.value)
-        //     .whenPressed(new ToggleDeployRoller(intake, true));
-
-
-        // new JoystickButton(xBox, XboxController.Button.kB.value)
-        //     .whenPressed(new ToggleDeployRoller(intake, false));
-
-
-        new JoystickButton(xBox, XboxController.Button.kA.value)
+        /*new JoystickButton(xBox, XboxController.Button.kA.value)
             .whenPressed(() -> shooter.setGatekeeperOpen(true));
 
         new JoystickButton(xBox, XboxController.Button.kA.value)
-            .whenReleased(() -> shooter.setGatekeeperOpen(false));
+            .whenReleased(() -> shooter.setGatekeeperOpen(false));*/
 
         new JoystickButton(xBox, XboxController.Button.kY.value)
-            .whenHeld(new ConstantRateShooter(shooter, 1));
+            .whenHeld(new ConstantRateShooter(shooter));
 
         new JoystickButton(prajBox, 2) //the one will change to the port on the praj box
-            .whenHeld(setGearHigh); //set to high gear
+            .whenHeld(new SetGear(shifter, true)); //set to high gear
 
         new JoystickButton(prajBox, 3)
-            .whenHeld(setGearLow); //set to low gear
+            .whenHeld(new SetGear(shifter, false)); //set to low gear
         
          new JoystickButton(xBox, XboxController.Button.kBumperLeft.value)
-             .whenHeld(beltFeed);
+             .whenHeld(new RunBelt(belt, 0.8));
 
          new JoystickButton(xBox, XboxController.Button.kBumperRight.value)
-             .whenHeld(beltUnfeed);
+             .whenHeld(new RunBelt(belt, -0.8));
 
         new JoystickButton(xBox, XboxController.Button.kStart.value)
             .whenPressed(new ToggleDeployRoller(intake, true));
