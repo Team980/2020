@@ -14,9 +14,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Belt extends SubsystemBase {
   private WPI_TalonSRX motor;
+  private Shooter shooter;
 
-  public Belt() {
+  public Belt(Shooter shooter) {
     motor = new WPI_TalonSRX(BELT_TALON_CHANNEL);
+    this.shooter = shooter;
   }
 
   public void run(double speed) {
