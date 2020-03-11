@@ -18,7 +18,7 @@ public class ConstantRateShooter extends CommandBase {
   private double targetRate;
   public ConstantRateShooter(Shooter shooter) {
     this.shooter = shooter;
-    this.targetRate = 2000;//RPM
+    this.targetRate = 2500;//RPM
     addRequirements(shooter);
   }
 
@@ -31,7 +31,7 @@ public class ConstantRateShooter extends CommandBase {
   
   @Override
   public void execute() {
-    shooter.fire(targetRate / 60.0);//convert to RPS
+   shooter.fire(targetRate / 60.0);//convert to RPS
   }
 
   

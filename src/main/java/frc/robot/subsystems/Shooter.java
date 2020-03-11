@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import frc.robot.util.Util;
+
 import static frc.robot.util.DavisDealWithThis.*;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -29,15 +31,10 @@ public class Shooter extends PIDSubsystem {
 
     motor = new WPI_TalonSRX(SHOOTER_TALON_CHANNEL);
 
-    shootEncoder = new Encoder(SHOOTER_ENCODER_CHANNEL_A, SHOOTER_ENCODER_CHANNEL_B, false, EncodingType.k2X);
+    shootEncoder = new Encoder(SHOOTER_ENCODER_CHANNEL_A, SHOOTER_ENCODER_CHANNEL_B, true, EncodingType.k4X);
     shootEncoder.setDistancePerPulse(1.0 / 2048.0);
 
     shootFF = new SimpleMotorFeedforward(SHOOTER_FEEDFORWARD_KS, SHOOTER_FEEDFORWARD_KV);
-  }
-
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Shooter RPM", shootEncoder.getRate() * 60);
   }
 
   @Override
@@ -52,14 +49,20 @@ public class Shooter extends PIDSubsystem {
   }
 
   public void manual(double throttle){
-    motor.set(throttle);
+    displayEncoderRate();
+    motor.set(-Util.applyDeadband(throttle, .1));
   }
 
   public void fire(double targetRPS){
+    displayEncoderRate();
     setSetpoint(targetRPS);
   }
 
   public Encoder getEncoder(){
     return shootEncoder;
+  }
+
+  public void displayEncoderRate(){
+    SmartDashboard.putNumber("Shooter RPM", shootEncoder.getRate() * 60.0);
   }
 }

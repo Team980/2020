@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -21,6 +22,7 @@ import frc.robot.commands.DriveBackAuto;
 import frc.robot.commands.RunBelt;
 import frc.robot.commands.SetGear;
 import frc.robot.commands.ToggleDeployRoller;
+//import frc.robot.commands.VelocityControlledShooter;
 import frc.robot.subsystems.Belt;
 //import frc.robot.commands.ColorWheelPositionControl;
 //import frc.robot.commands.ColorWheelRotationControl;
@@ -31,6 +33,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShifterSubsystem;
 //import frc.robot.subsystems.RunBelt;
 import frc.robot.subsystems.Shooter;
+//import frc.robot.subsystems.ShooterPID;
 
 import static frc.robot.util.DavisDealWithThis.*;
 
@@ -100,8 +103,13 @@ public class RobotContainer {
         new JoystickButton(xBox, XboxController.Button.kA.value)
             .whenReleased(() -> shooter.setGatekeeperOpen(false));*/
 
-        new JoystickButton(xBox, XboxController.Button.kY.value)
-            .whenHeld(new ConstantRateShooter(shooter));
+        new JoystickButton(xBox, Button.kY.value)
+            .whenPressed(new ConstantRateShooter(shooter));
+        
+        new JoystickButton(xBox, Button.kX.value)
+            .whenPressed(new RunCommand(() -> shooter.manual(xBox.getY(Hand.kRight)),
+            shooter
+            ));
 
         new JoystickButton(prajBox, 2) //the one will change to the port on the praj box
             .whenHeld(new SetGear(shifter, true)); //set to high gear

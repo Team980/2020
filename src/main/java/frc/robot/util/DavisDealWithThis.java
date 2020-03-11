@@ -78,7 +78,8 @@ public final class DavisDealWithThis {
     public static final int SHOOTER_ENCODER_CHANNEL_A = 4; 
     public static final int SHOOTER_ENCODER_CHANNEL_B = 5;
 
-    public static final double SHOOTER_RPS_MAX = 3100.0 / 60.0;//TODO: find real max
+    public static final double SHOOTER_RPS_MAX = 3000.0 / 60.0;
+    
     public static final double SHOOTER_P = .1;
     public static final double SHOOTER_I = 0;
     public static final double SHOOTER_D = .0005;
